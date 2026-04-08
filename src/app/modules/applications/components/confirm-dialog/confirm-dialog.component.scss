@@ -1,0 +1,52 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.dialog {
+  background: #1E2429;
+  border: 1px solid #2D3748;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+}
+h3 {
+  color: #E8E8E8;
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+p {
+  color: #A8A8A8;
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-secondary {
+  background: #2D3748;
+  color: #E8E8E8;
+  &:hover { background: #3a4a5c; }
+}
+.btn-danger {
+  background: #CC1016;
+  color: white;
+  &:hover { background: #a80d12; }
+}

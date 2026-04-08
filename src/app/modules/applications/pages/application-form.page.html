@@ -1,0 +1,123 @@
+<div class="form-page">
+  <div class="page-header">
+    <a routerLink="/applications" class="back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h1>{{ isEdit() ? 'Edit Application' : 'New Application' }}</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
+    <div class="form-grid">
+      <!-- Company -->
+      <div class="form-group full-width">
+        <label for="company">Company *</label>
+        <input id="company" formControlName="company" placeholder="e.g. Google" />
+        @if (form.get('company')?.touched && form.get('company')?.errors?.['required']) {
+          <span class="error">Company is required</span>
+        }
+      </div>
+
+      <!-- Role -->
+      <div class="form-group full-width">
+        <label for="role">Role *</label>
+        <input id="role" formControlName="role" placeholder="e.g. Senior Frontend Engineer" />
+        @if (form.get('role')?.touched && form.get('role')?.errors?.['required']) {
+          <span class="error">Role is required</span>
+        }
+      </div>
+
+      <!-- Location -->
+      <div class="form-group">
+        <label for="location">Location *</label>
+        <input id="location" formControlName="location" placeholder="e.g. Remote, New York, NY" />
+        @if (form.get('location')?.touched && form.get('location')?.errors?.['required']) {
+          <span class="error">Location is required</span>
+        }
+      </div>
+
+      <!-- Source -->
+      <div class="form-group">
+        <label for="source">Source *</label>
+        <input id="source" formControlName="source" placeholder="e.g. LinkedIn, Wellfound" />
+        @if (form.get('source')?.touched && form.get('source')?.errors?.['required']) {
+          <span class="error">Source is required</span>
+        }
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status">Status</label>
+        <div class="status-select-wrapper">
+          <div class="status-dot" [style.background]="getStatusColor()"></div>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ STATUS_LABELS[status] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Currency -->
+      <div class="form-group">
+        <label for="currency">Currency</label>
+        <select id="currency" formControlName="currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="CAD">CAD</option>
+          <option value="AUD">AUD</option>
+        </select>
+      </div>
+
+      <!-- Salary Range -->
+      <div class="form-group">
+        <label for="salaryMin">Salary Min</label>
+        <input id="salaryMin" type="number" formControlName="salaryMin" placeholder="e.g. 120000" />
+      </div>
+      <div class="form-group">
+        <label for="salaryMax">Salary Max</label>
+        <input id="salaryMax" type="number" formControlName="salaryMax" placeholder="e.g. 180000" />
+      </div>
+
+      <!-- Job URL -->
+      <div class="form-group full-width">
+        <label for="jobUrl">Job URL</label>
+        <input id="jobUrl" formControlName="jobUrl" placeholder="https://..." />
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group full-width">
+        <label for="tagsInput">Tags</label>
+        <div class="tags-input-wrapper">
+          @for (tag of tags(); track tag) {
+            <span class="tag">
+              {{ tag }}
+              <button type="button" class="tag-remove" (click)="removeTag(tag)">&times;</button>
+            </span>
+          }
+          <input
+            id="tagsInput"
+            class="tags-input"
+            placeholder="Type and press Enter"
+            (keydown.enter)="addTag($event)"
+            (keydown.comma)="addTag($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group full-width">
+        <label for="notes">Notes</label>
+        <textarea id="notes" formControlName="notes" rows="4" placeholder="Interview prep, contact info, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/applications" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || saving()">
+        {{ saving() ? 'Saving...' : (isEdit() ? 'Update' : 'Save') }}
+      </button>
+    </div>
+  </form>
+</div>

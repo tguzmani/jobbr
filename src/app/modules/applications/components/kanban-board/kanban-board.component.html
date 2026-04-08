@@ -1,0 +1,52 @@
+<div class="kanban">
+  @for (column of columns(); track column.status) {
+    <div class="kanban-column">
+      <div class="column-header">
+        <div class="column-title">
+          <div class="column-dot" [style.background]="column.color"></div>
+          <span>{{ column.label }}</span>
+        </div>
+        <span class="column-count">{{ column.apps.length }}</span>
+      </div>
+
+      <div
+        class="column-body"
+        cdkDropList
+        [id]="getColumnId(column.status)"
+        [cdkDropListData]="column.apps"
+        [cdkDropListConnectedTo]="connectedLists"
+        (cdkDropListDropped)="onDrop($event, column.status)"
+      >
+        @for (app of column.apps; track app.id) {
+          <div class="kanban-card" cdkDrag [cdkDragData]="app">
+            <div class="kanban-card-placeholder" *cdkDragPlaceholder></div>
+            <a [routerLink]="['/applications', app.id]" class="kanban-card-link">
+              <div class="kanban-card-header">
+                <div class="kanban-avatar">{{ app.company.charAt(0) }}</div>
+                <div class="kanban-info">
+                  <span class="kanban-company">{{ app.company }}</span>
+                  <span class="kanban-role">{{ app.role }}</span>
+                </div>
+              </div>
+              <div class="kanban-card-footer">
+                @if (app.source) {
+                  <span class="kanban-source">{{ app.source }}</span>
+                }
+                @if (app.commentCount) {
+                  <span class="kanban-comments">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    {{ app.commentCount }}
+                  </span>
+                }
+              </div>
+            </a>
+          </div>
+        }
+
+        @if (column.apps.length === 0) {
+          <div class="column-empty">No applications</div>
+        }
+      </div>
+    </div>
+  }
+</div>

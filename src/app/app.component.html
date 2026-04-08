@@ -1,0 +1,17 @@
+@if (authService.isLoading()) {
+  <div class="app-loading">
+    <div class="logo-icon">J</div>
+    <app-loading-spinner />
+  </div>
+} @else {
+  @if (authService.currentUser()) {
+    <div class="app-layout">
+      <app-nav-sidebar />
+      <main class="main-content">
+        <router-outlet />
+      </main>
+    </div>
+  } @else {
+    <router-outlet />
+  }
+}

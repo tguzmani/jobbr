@@ -1,0 +1,76 @@
+<div class="dashboard">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <a routerLink="/applications/new" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Application
+    </a>
+  </div>
+
+  @if (appService.isLoading()) {
+    <app-loading-spinner />
+  } @else {
+    <!-- Stats Row -->
+    <div class="stats-row">
+      @for (stat of stats(); track stat.label) {
+        <div class="stat-card">
+          <div class="stat-icon" [style.background]="stat.color + '15'" [style.color]="stat.color">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="stat.icon"/></svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" [style.color]="stat.color">{{ stat.count }}</span>
+            <span class="stat-percent" [style.color]="stat.color">{{ stat.percent }}%</span>
+          </div>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Pipeline Funnel -->
+    <div class="section">
+      <h2>Application Pipeline</h2>
+      <div class="funnel">
+        @for (stage of pipelineData(); track stage.status) {
+          <div class="funnel-stage">
+            <div class="funnel-label">
+              <span>{{ stage.label }}</span>
+              <span class="funnel-count">{{ stage.count }}</span>
+            </div>
+            <div class="funnel-bar-bg">
+              <div class="funnel-bar" [style.width]="stage.percent + '%'" [style.background]="stage.color"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Recent Applications</h2>
+        @if (appService.applications().length > 5) {
+          <a routerLink="/applications" class="view-all">View all</a>
+        }
+      </div>
+      @if (recentApps().length === 0) {
+        <app-empty-state
+          title="No applications yet"
+          message="Start tracking your job search by adding your first application."
+        >
+          <a routerLink="/applications/new" class="btn-primary">Add your first application</a>
+        </app-empty-state>
+      } @else {
+        <div class="cards-grid">
+          @for (app of recentApps(); track app.id) {
+            <app-card [application]="app" />
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- FAB -->
+  <a routerLink="/applications/new" class="fab" title="Add Application">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </a>
+</div>

@@ -30,6 +30,10 @@ html, body {
   &:hover { background: #3a4a5c; }
 }
 
+::-webkit-scrollbar-corner {
+  background: #1B1F23;
+}
+
 ::selection {
   background: rgba(10, 102, 194, 0.3);
   color: #E8E8E8;

@@ -20,11 +20,25 @@ export class DashboardComponent {
 
   stats = computed(() => {
     const byStatus = this.appService.byStatus();
-    const total = this.appService.applications().length;
+    const apps = this.appService.applications();
+    const total = apps.length;
     const inProgress = byStatus['screening'].length + byStatus['interview'].length;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayCount = apps.filter(a => {
+      const d = a.appliedAt.toDate();
+      return d.getFullYear() === today.getFullYear()
+        && d.getMonth() === today.getMonth()
+        && d.getDate() === today.getDate();
+    }).length;
+
     return [
-      { label: 'Total', count: total, color: '#E8E8E8', percent: 100,
+      { label: 'Total', count: total, color: '#E8E8E8', percent: null,
         icon: 'M3 3v18h18M7 17V13M11 17V9M15 17V5M19 17v-4' },
+      { label: 'Today', count: todayCount, color: '#17A2B8',
+        percent: total > 0 ? Math.round((todayCount / total) * 100) : 0,
+        icon: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' },
       { label: 'Applied', count: byStatus['applied'].length, color: '#0A66C2',
         percent: total > 0 ? Math.round((byStatus['applied'].length / total) * 100) : 0,
         icon: 'M22 2L11 13 22 2zM22 2l-7 20-4-9-9-4 20-7z' },

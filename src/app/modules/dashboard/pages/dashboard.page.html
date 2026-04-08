@@ -14,12 +14,16 @@
     <div class="stats-row">
       @for (stat of stats(); track stat.label) {
         <div class="stat-card">
-          <div class="stat-icon" [style.background]="stat.color + '15'" [style.color]="stat.color">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="stat.icon"/></svg>
-          </div>
-          <div class="stat-content">
-            <span class="stat-value" [style.color]="stat.color">{{ stat.count }}</span>
-            <span class="stat-percent" [style.color]="stat.color">{{ stat.percent }}%</span>
+          <div class="stat-card-top">
+            <div class="stat-left">
+              <span class="stat-value" [style.color]="stat.color">{{ stat.count }}</span>
+              @if (stat.percent !== null) {
+                <span class="stat-percent" [style.color]="stat.color">{{ stat.percent }}%</span>
+              }
+            </div>
+            <div class="stat-icon" [style.background]="stat.color + '15'" [style.color]="stat.color">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="stat.icon"/></svg>
+            </div>
           </div>
           <span class="stat-label">{{ stat.label }}</span>
         </div>

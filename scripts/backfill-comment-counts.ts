@@ -13,14 +13,27 @@
 /*
 // Paste this in browser console:
 
+const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
 const { getFirestore, collection, getDocs, updateDoc, doc, getCountFromServer } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js');
+const { getAuth, signInWithPopup, GoogleAuthProvider } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js');
 
-// Get the existing Firestore instance from AngularFire
-const db = getFirestore();
+// Initialize a secondary Firebase app (the bundled one isn't accessible from the CDN SDK)
+const firebaseConfig = {
+  apiKey: 'AIzaSyAC63maQlQ033G5c5O6Qx38b3kVhb0lxYA',
+  authDomain: 'jobbr-81620.firebaseapp.com',
+  projectId: 'jobbr-81620',
+  storageBucket: 'jobbr-81620.firebasestorage.app',
+  messagingSenderId: '120811018688',
+  appId: '1:120811018688:web:c1d15c2100b96c126d9025'
+};
+const app = getApps().find(a => a.name === '_backfill') ?? initializeApp(firebaseConfig, '_backfill');
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Get current user UID from Firebase Auth
-const { getAuth } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js');
-const auth = getAuth();
+// Authenticate — will reuse existing Google session so it's just a popup click
+if (!auth.currentUser) {
+  await signInWithPopup(auth, new GoogleAuthProvider());
+}
 const userId = auth.currentUser.uid;
 console.log('User:', userId);
 

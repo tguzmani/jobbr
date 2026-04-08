@@ -147,14 +147,25 @@
 }
 .tab {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   text-decoration: none;
   color: #A8A8A8;
   font-size: 10px;
   font-weight: 500;
+  padding: 6px 0;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: background 0.15s;
+
+  &:active { background: rgba(255, 255, 255, 0.05); }
   &.active { color: #0A66C2; }
+
+  svg, span { pointer-events: none; }
 }
 @media (max-width: 768px) {
   .sidebar { display: none; }

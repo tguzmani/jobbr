@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { TasksService } from '../../services/tasks.service';
+import { ApplicationsService } from '../../../applications/services/applications.service';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import {
   TASK_STATUSES,
@@ -23,6 +24,7 @@ import {
 })
 export class TaskKanbanBoardComponent {
   private tasksService = inject(TasksService);
+  private appsService = inject(ApplicationsService);
 
   statuses = TASK_STATUSES;
   STATUS_LABELS = TASK_STATUS_LABELS;
@@ -44,6 +46,11 @@ export class TaskKanbanBoardComponent {
 
   getColumnId(status: TaskStatus): string {
     return `task-column-${status}`;
+  }
+
+  getCompanyName(task: Task): string | null {
+    if (!task.applicationId) return null;
+    return this.appsService.getCompanyName(task.applicationId);
   }
 
   isOverdue(task: Task): boolean {

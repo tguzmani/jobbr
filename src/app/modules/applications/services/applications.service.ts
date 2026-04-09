@@ -122,6 +122,15 @@ export class ApplicationsService implements OnDestroy {
     }
   }
 
+  findById(id: string): JobApplication | undefined {
+    return this.applications().find(a => a.id === id);
+  }
+
+  getCompanyName(applicationId: string): string | null {
+    const app = this.findById(applicationId);
+    return app ? `${app.company} - ${app.role}` : null;
+  }
+
   async getById(id: string): Promise<JobApplication | null> {
     return runInInjectionContext(this.injector, async () => {
       const ref = this.getDocRef(id);

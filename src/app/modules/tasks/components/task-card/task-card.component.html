@@ -2,7 +2,9 @@
   <div class="card-header">
     <div class="task-info">
       <h4 class="task-name">{{ task().name }}</h4>
-      @if (task().description) {
+      @if (companyName()) {
+        <p class="task-company">{{ companyName() }}</p>
+      } @else if (task().description) {
         <p class="task-desc">{{ task().description }}</p>
       }
     </div>

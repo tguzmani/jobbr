@@ -23,6 +23,9 @@
             <a [routerLink]="['/tasks', task.id]" class="kanban-card-link" [class.overdue]="isOverdue(task)">
               <div class="kanban-card-header">
                 <span class="kanban-name">{{ task.name }}</span>
+                @if (getCompanyName(task)) {
+                  <span class="kanban-company">{{ getCompanyName(task) }}</span>
+                }
               </div>
               <div class="kanban-card-footer">
                 <span class="kanban-type" [style.background]="TYPE_COLORS[task.type] + '22'" [style.color]="TYPE_COLORS[task.type]">

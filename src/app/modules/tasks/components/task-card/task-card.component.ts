@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Task, TaskStatus, TASK_TYPE_LABELS, TASK_TYPE_COLORS } from '../../models/task.model';
 import { TasksService } from '../../services/tasks.service';
+import { ApplicationsService } from '../../../applications/services/applications.service';
 import { TaskStatusBadgeComponent } from '../task-status-badge/task-status-badge.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
@@ -15,10 +16,17 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
 })
 export class TaskCardComponent {
   private tasksService = inject(TasksService);
+  private appsService = inject(ApplicationsService);
   task = input.required<Task>();
 
   typeLabel = computed(() => TASK_TYPE_LABELS[this.task().type]);
   typeColor = computed(() => TASK_TYPE_COLORS[this.task().type]);
+
+  companyName = computed(() => {
+    const appId = this.task().applicationId;
+    if (!appId) return null;
+    return this.appsService.getCompanyName(appId);
+  });
 
   isOverdue = computed(() => {
     const task = this.task();

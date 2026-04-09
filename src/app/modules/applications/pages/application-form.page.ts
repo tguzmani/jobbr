@@ -1,18 +1,21 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApplicationsService } from '../services/applications.service';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { APPLICATION_STATUSES, STATUS_LABELS, STATUS_COLORS, ApplicationStatus } from '../models/job-application.model';
 
 @Component({
   selector: 'app-application-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './application-form.page.html',
   styleUrl: './application-form.page.scss'
 })
 export class ApplicationFormComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private location = inject(Location);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private appService = inject(ApplicationsService);
@@ -24,6 +27,10 @@ export class ApplicationFormComponent implements OnInit {
 
   statuses = APPLICATION_STATUSES;
   STATUS_LABELS = STATUS_LABELS;
+
+  goBack() {
+    this.location.back();
+  }
 
   getStatusColor(): string {
     const val = this.form.get('status')?.value as ApplicationStatus;

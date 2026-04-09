@@ -1,0 +1,92 @@
+@if (loading()) {
+  <app-loading-spinner />
+} @else if (task()) {
+  @let t = task()!;
+  <div class="detail-page">
+    <div class="page-header">
+      <button type="button" class="back-link" (click)="goBack()">
+        <app-icon name="chevron-left" />
+        Back
+      </button>
+      <div class="actions">
+        <a [routerLink]="['/tasks', t.id, 'edit']" class="btn btn-secondary">Edit</a>
+        <button class="btn btn-danger" (click)="showConfirm.set(true)">Delete</button>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card main-info">
+        <div class="task-header">
+          <div>
+            <h1>{{ t.name }}</h1>
+            <div class="task-meta-row">
+              <app-task-status-badge [status]="t.status" />
+              <span class="type-badge" [style.background]="TYPE_COLORS[t.type] + '22'" [style.color]="TYPE_COLORS[t.type]">
+                {{ TYPE_LABELS[t.type] }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Due Date</span>
+            <span class="info-value" [class.overdue]="isOverdue()">
+              {{ t.dueDate.toDate() | date:'medium' }}
+              @if (isOverdue()) {
+                <span class="overdue-badge">Overdue</span>
+              }
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Created</span>
+            <span class="info-value">{{ t.createdAt.toDate() | date:'mediumDate' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last Updated</span>
+            <span class="info-value">{{ t.updatedAt.toDate() | date:'medium' }}</span>
+          </div>
+          @if (t.link) {
+            <div class="info-item">
+              <span class="info-label">Link</span>
+              <a [href]="t.link" target="_blank" class="info-link">Open link</a>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (linkedApp()) {
+        <div class="detail-card">
+          <h3>Linked Application</h3>
+          <a [routerLink]="['/applications', linkedApp()!.id]" class="linked-app">
+            <div class="linked-app-avatar">{{ linkedApp()!.company.charAt(0) }}</div>
+            <div>
+              <span class="linked-app-company">{{ linkedApp()!.company }}</span>
+              <span class="linked-app-role">{{ linkedApp()!.role }}</span>
+            </div>
+          </a>
+        </div>
+      }
+
+      @if (t.description) {
+        <div class="detail-card">
+          <h3>Description</h3>
+          <p class="description">{{ t.description }}</p>
+        </div>
+      }
+
+      <div class="detail-card">
+        <app-task-comment-list [taskId]="t.id" />
+      </div>
+    </div>
+
+    @if (showConfirm()) {
+      <app-confirm-dialog
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        (confirmed)="deleteTask(t.id)"
+        (cancelled)="showConfirm.set(false)"
+      />
+    }
+  </div>
+}

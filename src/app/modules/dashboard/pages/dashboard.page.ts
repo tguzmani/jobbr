@@ -1,20 +1,24 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ApplicationsService } from '../../applications/services/applications.service';
+import { TasksService } from '../../tasks/services/tasks.service';
 import { AppCardComponent } from '../../applications/components/app-card/app-card.component';
+import { TaskCardComponent } from '../../tasks/components/task-card/task-card.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { PIPELINE_STATUSES, STATUS_LABELS, STATUS_COLORS } from '../../applications/models/job-application.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, AppCardComponent, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [RouterLink, AppCardComponent, TaskCardComponent, LoadingSpinnerComponent, EmptyStateComponent, IconComponent],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
 })
 export class DashboardComponent {
   appService = inject(ApplicationsService);
+  tasksService = inject(TasksService);
 
   recentApps = computed(() => this.appService.applications().slice(0, 5));
 

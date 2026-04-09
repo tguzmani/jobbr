@@ -2,11 +2,12 @@ import { Component, inject, input, OnInit, OnDestroy, signal } from '@angular/co
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentsService } from '../../services/comments.service';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-comment-list',
   standalone: true,
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, IconComponent],
   templateUrl: './comment-list.component.html',
   styleUrl: './comment-list.component.scss'
 })

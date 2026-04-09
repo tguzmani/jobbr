@@ -4,10 +4,10 @@
   @let application = app()!;
   <div class="detail-page">
     <div class="page-header">
-      <a routerLink="/applications" class="back-link">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      <button type="button" class="back-link" (click)="goBack()">
+        <app-icon name="chevron-left" />
         Back
-      </a>
+      </button>
       <div class="actions">
         <a [routerLink]="['/applications', application.id, 'edit']" class="btn btn-secondary">Edit</a>
         <button class="btn btn-danger" (click)="showConfirm.set(true)">Delete</button>
@@ -95,6 +95,34 @@
           <p class="notes">{{ application.notes }}</p>
         </div>
       }
+
+      <div class="detail-card">
+        <div class="section-header-row">
+          <h3>Tasks</h3>
+          <a [routerLink]="['/tasks/new']" [queryParams]="{ applicationId: application.id }" class="btn-add-task">
+            <app-icon name="plus" [size]="14" [strokeWidth]="2.5" />
+            Add Task
+          </a>
+        </div>
+        @if (linkedTasks().length === 0) {
+          <p class="empty-text">No tasks linked to this application.</p>
+        } @else {
+          <div class="tasks-list">
+            @for (task of linkedTasks(); track task.id) {
+              <a [routerLink]="['/tasks', task.id]" class="task-item">
+                <div class="task-item-left">
+                  <span class="task-item-name">{{ task.name }}</span>
+                  <span class="task-item-type" [style.background]="TYPE_COLORS[task.type] + '22'" [style.color]="TYPE_COLORS[task.type]">{{ TYPE_LABELS[task.type] }}</span>
+                </div>
+                <div class="task-item-right">
+                  <span class="task-item-due">{{ task.dueDate.toDate() | date:'mediumDate' }}</span>
+                  <app-task-status-badge [status]="task.status" />
+                </div>
+              </a>
+            }
+          </div>
+        }
+      </div>
 
       <div class="detail-card">
         <app-comment-list [applicationId]="application.id" />

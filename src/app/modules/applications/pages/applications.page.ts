@@ -6,6 +6,7 @@ import { AppCardComponent } from '../components/app-card/app-card.component';
 import { KanbanBoardComponent } from '../components/kanban-board/kanban-board.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { APPLICATION_STATUSES, STATUS_LABELS, ApplicationStatus } from '../models/job-application.model';
 
 export type ViewMode = 'list' | 'kanban';
@@ -13,7 +14,7 @@ export type ViewMode = 'list' | 'kanban';
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [RouterLink, FormsModule, AppCardComponent, KanbanBoardComponent, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [RouterLink, FormsModule, AppCardComponent, KanbanBoardComponent, LoadingSpinnerComponent, EmptyStateComponent, IconComponent],
   templateUrl: './applications.page.html',
   styleUrl: './applications.page.scss'
 })

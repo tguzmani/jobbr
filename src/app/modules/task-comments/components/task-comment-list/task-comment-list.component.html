@@ -1,0 +1,36 @@
+<div class="comments-section">
+  <h3>Activity Log</h3>
+
+  <form class="comment-form" (ngSubmit)="addComment()">
+    <textarea
+      [ngModel]="newComment()"
+      (ngModelChange)="newComment.set($event)"
+      name="comment"
+      placeholder="Add a comment..."
+      rows="3"
+    ></textarea>
+    <button type="submit" class="btn btn-primary" [disabled]="submitting() || !newComment().trim()">
+      {{ submitting() ? 'Posting...' : 'Post' }}
+    </button>
+  </form>
+
+  @if (isLoading()) {
+    <p class="loading-text">Loading comments...</p>
+  } @else if (comments().length === 0) {
+    <p class="empty-text">No comments yet. Add one to start tracking this task's progress.</p>
+  } @else {
+    <div class="comments-list">
+      @for (comment of comments(); track comment.id) {
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-date">{{ comment.createdAt.toDate() | date:'medium' }}</span>
+            <button class="comment-delete" (click)="deleteComment(comment.id)" title="Delete comment">
+              <app-icon name="close" [size]="14" />
+            </button>
+          </div>
+          <p class="comment-text">{{ comment.text }}</p>
+        </div>
+      }
+    </div>
+  }
+</div>

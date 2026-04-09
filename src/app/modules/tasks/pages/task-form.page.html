@@ -1,0 +1,84 @@
+<div class="form-page">
+  <div class="page-header">
+    <button type="button" class="back-link" (click)="goBack()">
+      <app-icon name="chevron-left" />
+      Back
+    </button>
+    <h1>{{ isEdit() ? 'Edit Task' : 'New Task' }}</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
+    <div class="form-grid">
+      <!-- Name -->
+      <div class="form-group full-width">
+        <label for="name">Name *</label>
+        <input id="name" formControlName="name" placeholder="e.g. Technical Assessment" />
+        @if (form.get('name')?.touched && form.get('name')?.errors?.['required']) {
+          <span class="error">Name is required</span>
+        }
+      </div>
+
+      <!-- Type -->
+      <div class="form-group">
+        <label for="type">Type *</label>
+        <select id="type" formControlName="type">
+          @for (type of types; track type) {
+            <option [value]="type">{{ TYPE_LABELS[type] }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status">Status</label>
+        <div class="status-select-wrapper">
+          <div class="status-dot" [style.background]="getStatusColor()"></div>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ STATUS_LABELS[status] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Due Date -->
+      <div class="form-group">
+        <label for="dueDate">Due Date *</label>
+        <input id="dueDate" type="datetime-local" formControlName="dueDate" />
+        @if (form.get('dueDate')?.touched && form.get('dueDate')?.errors?.['required']) {
+          <span class="error">Due date is required</span>
+        }
+      </div>
+
+      <!-- Application -->
+      <div class="form-group">
+        <label for="applicationId">Linked Application</label>
+        <select id="applicationId" formControlName="applicationId">
+          <option value="">None</option>
+          @for (app of applications(); track app.id) {
+            <option [value]="app.id">{{ app.company }} - {{ app.role }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Link -->
+      <div class="form-group full-width">
+        <label for="link">Link</label>
+        <input id="link" formControlName="link" placeholder="https://..." />
+      </div>
+
+      <!-- Description -->
+      <div class="form-group full-width">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" rows="4" placeholder="Additional details about this task..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || saving()">
+        {{ saving() ? 'Saving...' : (isEdit() ? 'Update' : 'Save') }}
+      </button>
+    </div>
+  </form>
+</div>

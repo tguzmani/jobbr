@@ -1,0 +1,52 @@
+<div class="kanban">
+  @for (column of columns(); track column.status) {
+    <div class="kanban-column">
+      <div class="column-header">
+        <div class="column-title">
+          <div class="column-dot" [style.background]="column.color"></div>
+          <span>{{ column.label }}</span>
+        </div>
+        <span class="column-count">{{ column.tasks.length }}</span>
+      </div>
+
+      <div
+        class="column-body"
+        cdkDropList
+        [id]="getColumnId(column.status)"
+        [cdkDropListData]="column.tasks"
+        [cdkDropListConnectedTo]="connectedLists"
+        (cdkDropListDropped)="onDrop($event, column.status)"
+      >
+        @for (task of column.tasks; track task.id) {
+          <div class="kanban-card" cdkDrag [cdkDragData]="task">
+            <div class="kanban-card-placeholder" *cdkDragPlaceholder></div>
+            <a [routerLink]="['/tasks', task.id]" class="kanban-card-link" [class.overdue]="isOverdue(task)">
+              <div class="kanban-card-header">
+                <span class="kanban-name">{{ task.name }}</span>
+              </div>
+              <div class="kanban-card-footer">
+                <span class="kanban-type" [style.background]="TYPE_COLORS[task.type] + '22'" [style.color]="TYPE_COLORS[task.type]">
+                  {{ TYPE_LABELS[task.type] }}
+                </span>
+                <span class="kanban-due" [class.overdue-text]="isOverdue(task)">
+                  <app-icon name="clock" [size]="12" />
+                  {{ task.dueDate.toDate() | date:'shortDate' }}
+                </span>
+                @if (task.commentCount) {
+                  <span class="kanban-comments">
+                    <app-icon name="comment" [size]="12" />
+                    {{ task.commentCount }}
+                  </span>
+                }
+              </div>
+            </a>
+          </div>
+        }
+
+        @if (column.tasks.length === 0) {
+          <div class="column-empty">No tasks</div>
+        }
+      </div>
+    </div>
+  }
+</div>

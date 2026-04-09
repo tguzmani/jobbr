@@ -1,4 +1,4 @@
-.form-page { padding: 24px; max-width: 720px; }
+.form-page { padding: 24px; width: 100%; }
 .page-header {
   display: flex;
   align-items: center;
@@ -9,8 +9,15 @@
 .back-link {
   display: flex;
   align-items: center;
+  gap: 4px;
   color: #A8A8A8;
   text-decoration: none;
+  font-size: 14px;
+  font-family: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
   &:hover { color: #E8E8E8; }
 }
 .form-card {
@@ -36,7 +43,7 @@ label {
   font-weight: 500;
 }
 input, select, textarea {
-  background: #111418;
+  background-color: #111418;
   border: 1px solid #2D3748;
   border-radius: 4px;
   padding: 10px 12px;

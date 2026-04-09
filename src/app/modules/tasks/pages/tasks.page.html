@@ -1,0 +1,78 @@
+<div class="page" [class.kanban-mode]="viewMode() === 'kanban'">
+  <div class="page-header">
+    <h1>Tasks</h1>
+    <div class="header-actions">
+      <div class="view-toggle">
+        <button class="view-btn" [class.active]="viewMode() === 'list'" (click)="setViewMode('list')" title="List view">
+          <app-icon name="list-view" [size]="18" />
+        </button>
+        <button class="view-btn" [class.active]="viewMode() === 'kanban'" (click)="setViewMode('kanban')" title="Kanban view">
+          <app-icon name="kanban" [size]="18" />
+        </button>
+      </div>
+      <a routerLink="/tasks/new" class="btn-primary">
+        <app-icon name="plus" [size]="16" [strokeWidth]="2.5" />
+        Add
+      </a>
+    </div>
+  </div>
+
+  @if (tasksService.isLoading()) {
+    <app-loading-spinner />
+  } @else if (viewMode() === 'kanban') {
+    <app-task-kanban-board />
+  } @else {
+    <!-- Toolbar (list view only) -->
+    <div class="toolbar">
+      <div class="search-box">
+        <app-icon name="search" [size]="16" />
+        <input type="text" placeholder="Search tasks..." [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
+      </div>
+      <div class="filters">
+        <div class="filter-chips">
+          <button class="chip" [class.active]="!statusFilter()" (click)="statusFilter.set(null)">All</button>
+          @for (status of statuses; track status) {
+            <button class="chip" [class.active]="statusFilter() === status" (click)="statusFilter.set(status)">
+              {{ statusLabels[status] }}
+            </button>
+          }
+        </div>
+        <div class="filter-right">
+          <select class="sort-select" [ngModel]="typeFilter() || ''" (ngModelChange)="typeFilter.set($event || null)">
+            <option value="">All Types</option>
+            @for (type of types; track type) {
+              <option [value]="type">{{ typeLabels[type] }}</option>
+            }
+          </select>
+          <select class="sort-select" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+            <option value="dueDate">Due Date</option>
+            <option value="updatedAt">Last Updated</option>
+            <option value="name">Name</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    @if (filteredTasks().length === 0) {
+      <app-empty-state
+        [title]="searchQuery() || statusFilter() || typeFilter() ? 'No matches found' : 'No tasks yet'"
+        [message]="searchQuery() || statusFilter() || typeFilter() ? 'Try adjusting your search or filters.' : 'Create your first task to get started!'"
+      >
+        @if (!searchQuery() && !statusFilter() && !typeFilter()) {
+          <a routerLink="/tasks/new" class="btn-primary">Add your first task</a>
+        }
+      </app-empty-state>
+    } @else {
+      <div class="results-count">{{ filteredTasks().length }} task{{ filteredTasks().length !== 1 ? 's' : '' }}</div>
+      <div class="cards-list">
+        @for (task of filteredTasks(); track task.id) {
+          <app-task-card [task]="task" />
+        }
+      </div>
+    }
+  }
+
+  <a routerLink="/tasks/new" class="fab" title="Add Task">
+    <app-icon name="plus" [size]="24" [strokeWidth]="2.5" />
+  </a>
+</div>

@@ -2,6 +2,7 @@ import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { ApplicationsService } from '../../services/applications.service';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import {
   APPLICATION_STATUSES,
   STATUS_LABELS,
@@ -13,7 +14,7 @@ import {
 @Component({
   selector: 'app-kanban-board',
   standalone: true,
-  imports: [RouterLink, DragDropModule],
+  imports: [RouterLink, DragDropModule, IconComponent],
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.scss'
 })

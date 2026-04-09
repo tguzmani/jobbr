@@ -1,0 +1,32 @@
+<a class="card" [routerLink]="['/tasks', task().id]" [class.overdue]="isOverdue()" [class.due-soon]="isDueSoon()">
+  <div class="card-header">
+    <div class="task-info">
+      <h4 class="task-name">{{ task().name }}</h4>
+      @if (task().description) {
+        <p class="task-desc">{{ task().description }}</p>
+      }
+    </div>
+    <app-task-status-badge [status]="task().status" />
+  </div>
+  <div class="card-meta">
+    <span class="meta-item type-badge" [style.background]="typeColor() + '22'" [style.color]="typeColor()">
+      {{ typeLabel() }}
+    </span>
+    <span class="meta-item" [class.overdue-text]="isOverdue()" [class.due-soon-text]="isDueSoon()">
+      <app-icon name="clock" [size]="14" />
+      {{ task().dueDate.toDate() | date:'mediumDate' }}
+    </span>
+    @if (task().link) {
+      <span class="meta-item">
+        <app-icon name="link" [size]="14" />
+        Link
+      </span>
+    }
+    @if (task().commentCount) {
+      <span class="meta-item">
+        <app-icon name="comment" [size]="14" />
+        {{ task().commentCount }}
+      </span>
+    }
+  </div>
+</a>

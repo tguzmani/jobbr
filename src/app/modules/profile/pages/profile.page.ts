@@ -2,12 +2,13 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../services/profile.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { UserProfile, PROFILE_FIELD_GROUPS, ProfileFieldGroup } from '../models/user-profile.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule, LoadingSpinnerComponent],
+  imports: [FormsModule, LoadingSpinnerComponent, IconComponent],
   templateUrl: './profile.page.html',
   styleUrl: './profile.page.scss'
 })

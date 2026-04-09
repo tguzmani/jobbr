@@ -19,39 +19,90 @@
   @if (profileService.isLoading()) {
     <app-loading-spinner />
   } @else {
-    <div class="profile-card">
-      @for (field of fields; track field.key) {
-        <div class="field">
-          <div class="field-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="field.icon"/></svg>
-            <span>{{ field.label }}</span>
-          </div>
+    @for (group of groups; track group.name) {
+      <div class="profile-group">
+        <div class="group-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="group.icon"/></svg>
+          <span>{{ group.name }}</span>
+        </div>
 
-          @if (editing()) {
-            <input
-              [type]="field.type"
-              [placeholder]="field.placeholder"
-              [ngModel]="formData()[field.key]"
-              (ngModelChange)="updateField(field.key, $event)"
-            />
-          } @else {
-            <div class="field-value">
-              @if (profileService.profile()[field.key]) {
-                <span class="value-text">{{ profileService.profile()[field.key] }}</span>
-                <button class="copy-btn" (click)="copyToClipboard(field.key, profileService.profile()[field.key])" [title]="'Copy ' + field.label">
-                  @if (copiedKey() === field.key) {
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  } @else {
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  }
-                </button>
+        <div class="profile-card">
+          @for (field of group.fields; track field.key) {
+            <div class="field">
+              <div class="field-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="field.icon"/></svg>
+                <span>{{ field.label }}</span>
+              </div>
+
+              @if (editing()) {
+                @if (field.type === 'select' && field.options) {
+                  <select
+                    [ngModel]="formData()[field.key]"
+                    (ngModelChange)="updateField(field.key, $event)"
+                  >
+                    @for (opt of field.options; track opt.value) {
+                      <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                } @else {
+                  <input
+                    [type]="field.type"
+                    [placeholder]="field.placeholder"
+                    [ngModel]="formData()[field.key]"
+                    (ngModelChange)="updateField(field.key, $event)"
+                  />
+                }
               } @else {
-                <span class="empty-value">Not set</span>
+                <div class="field-value">
+                  @if (profileService.profile()[field.key]) {
+                    <span class="value-text">{{ profileService.profile()[field.key] }}</span>
+                    @if (field.copyable) {
+                      <button class="copy-btn" (click)="copyToClipboard(field.key, profileService.profile()[field.key])" [title]="'Copy ' + field.label">
+                        @if (copiedKey() === field.key) {
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        } @else {
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        }
+                      </button>
+                    }
+                  } @else {
+                    <span class="empty-value">Not set</span>
+                  }
+                </div>
               }
             </div>
           }
+
+          @if (group.computedFields) {
+            @for (cf of group.computedFields; track cf.id) {
+              <div class="field computed-field">
+                <div class="field-label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="cf.icon"/></svg>
+                  <span>{{ cf.label }}</span>
+                  <span class="derived-badge">Derived</span>
+                </div>
+
+                <div class="field-value">
+                  @if (getComputedValue(group, cf.id)) {
+                    <span class="value-text">{{ getComputedValue(group, cf.id) }}</span>
+                    @if (!editing()) {
+                      <button class="copy-btn" (click)="copyToClipboard(cf.id, getComputedValue(group, cf.id))" [title]="'Copy ' + cf.label">
+                        @if (copiedKey() === cf.id) {
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        } @else {
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        }
+                      </button>
+                    }
+                  } @else {
+                    <span class="empty-value">Not set</span>
+                  }
+                </div>
+              </div>
+            }
+          }
         </div>
-      }
-    </div>
+      </div>
+    }
   }
 </div>

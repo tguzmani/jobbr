@@ -1,8 +1,8 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../services/profile.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { UserProfile, PROFILE_FIELDS } from '../models/user-profile.model';
+import { UserProfile, PROFILE_FIELD_GROUPS, ProfileFieldGroup } from '../models/user-profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +13,7 @@ import { UserProfile, PROFILE_FIELDS } from '../models/user-profile.model';
 })
 export class ProfileComponent implements OnInit {
   profileService = inject(ProfileService);
-  fields = PROFILE_FIELDS;
+  groups = PROFILE_FIELD_GROUPS;
 
   editing = signal(false);
   saving = signal(false);
@@ -46,6 +46,13 @@ export class ProfileComponent implements OnInit {
 
   updateField(key: keyof UserProfile, value: string) {
     this.formData.set({ ...this.formData(), [key]: value });
+  }
+
+  getComputedValue(group: ProfileFieldGroup, computedId: string): string {
+    const cf = group.computedFields?.find(c => c.id === computedId);
+    if (!cf) return '';
+    const source = this.editing() ? this.formData() : this.profileService.profile();
+    return cf.derive(source);
   }
 
   async copyToClipboard(key: string, value: string) {

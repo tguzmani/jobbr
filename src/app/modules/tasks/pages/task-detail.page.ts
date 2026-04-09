@@ -65,6 +65,13 @@ export class TaskDetailComponent implements OnInit {
     this.location.back();
   }
 
+  async updateStatus(status: TaskStatus) {
+    const t = this.task();
+    if (!t) return;
+    await this.tasksService.update(t.id, { status });
+    this.task.set({ ...t, status });
+  }
+
   async deleteTask(id: string) {
     await this.tasksService.remove(id);
     this.router.navigate(['/tasks']);

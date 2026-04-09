@@ -1,7 +1,8 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Task, TASK_TYPE_LABELS, TASK_TYPE_COLORS } from '../../models/task.model';
+import { Task, TaskStatus, TASK_TYPE_LABELS, TASK_TYPE_COLORS } from '../../models/task.model';
+import { TasksService } from '../../services/tasks.service';
 import { TaskStatusBadgeComponent } from '../task-status-badge/task-status-badge.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
@@ -13,6 +14,7 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
   styleUrl: './task-card.component.scss'
 })
 export class TaskCardComponent {
+  private tasksService = inject(TasksService);
   task = input.required<Task>();
 
   typeLabel = computed(() => TASK_TYPE_LABELS[this.task().type]);
@@ -33,4 +35,8 @@ export class TaskCardComponent {
     in2Days.setDate(now.getDate() + 2);
     return due > now && due <= in2Days;
   });
+
+  async onStatusChange(status: TaskStatus) {
+    await this.tasksService.update(this.task().id, { status });
+  }
 }

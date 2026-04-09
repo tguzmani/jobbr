@@ -29,7 +29,7 @@
 
     @if (application.status === 'rejected' || application.status === 'withdrawn') {
       <div class="status-alert" [style.border-color]="STATUS_COLORS[application.status]">
-        <app-status-badge [status]="application.status" />
+        <app-status-badge [status]="application.status" [editable]="true" (statusChange)="updateStatus($event)" />
       </div>
     }
 
@@ -40,6 +40,9 @@
           <div>
             <h1>{{ application.company }}</h1>
             <h2>{{ application.role }}</h2>
+          </div>
+          <div class="header-status">
+            <app-status-badge [status]="application.status" [editable]="true" (statusChange)="updateStatus($event)" />
           </div>
         </div>
 
@@ -116,7 +119,7 @@
                 </div>
                 <div class="task-item-right">
                   <span class="task-item-due">{{ task.dueDate.toDate() | date:'mediumDate' }}</span>
-                  <app-task-status-badge [status]="task.status" />
+                  <app-task-status-badge [status]="task.status" [editable]="true" (statusChange)="updateTaskStatus(task.id, $event)" />
                 </div>
               </a>
             }

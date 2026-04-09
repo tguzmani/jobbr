@@ -10,7 +10,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dialog.component';
 import { CommentListComponent } from '../../comments/components/comment-list/comment-list.component';
 import { JobApplication, PIPELINE_STATUSES, STATUS_LABELS, STATUS_COLORS, ApplicationStatus } from '../models/job-application.model';
-import { TASK_TYPE_LABELS, TASK_TYPE_COLORS } from '../../tasks/models/task.model';
+import { TASK_TYPE_LABELS, TASK_TYPE_COLORS, TaskStatus } from '../../tasks/models/task.model';
 
 @Component({
   selector: 'app-application-detail',
@@ -57,6 +57,17 @@ export class ApplicationDetailComponent implements OnInit {
   isStageActive(currentStatus: ApplicationStatus, stage: ApplicationStatus): boolean {
     const order = PIPELINE_STATUSES;
     return order.indexOf(stage) <= order.indexOf(currentStatus);
+  }
+
+  async updateTaskStatus(taskId: string, status: TaskStatus) {
+    await this.tasksService.update(taskId, { status });
+  }
+
+  async updateStatus(status: ApplicationStatus) {
+    const application = this.app();
+    if (!application) return;
+    await this.appService.update(application.id, { status });
+    this.app.set({ ...application, status });
   }
 
   async deleteApp(id: string) {

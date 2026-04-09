@@ -7,7 +7,7 @@
         <p class="role">{{ application().role }}</p>
       </div>
     </div>
-    <app-status-badge [status]="application().status" />
+    <app-status-badge [status]="application().status" [editable]="true" (statusChange)="onStatusChange($event)" />
   </div>
   <div class="card-meta">
     @if (application().location) {

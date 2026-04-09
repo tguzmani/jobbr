@@ -1,7 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { JobApplication } from '../../models/job-application.model';
+import { JobApplication, ApplicationStatus } from '../../models/job-application.model';
+import { ApplicationsService } from '../../services/applications.service';
 import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
@@ -13,5 +14,10 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
   styleUrl: './app-card.component.scss'
 })
 export class AppCardComponent {
+  private appService = inject(ApplicationsService);
   application = input.required<JobApplication>();
+
+  async onStatusChange(status: ApplicationStatus) {
+    await this.appService.update(this.application().id, { status });
+  }
 }

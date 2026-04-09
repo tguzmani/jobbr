@@ -20,7 +20,7 @@
           <div>
             <h1>{{ t.name }}</h1>
             <div class="task-meta-row">
-              <app-task-status-badge [status]="t.status" />
+              <app-task-status-badge [status]="t.status" [editable]="true" (statusChange)="updateStatus($event)" />
               <span class="type-badge" [style.background]="TYPE_COLORS[t.type] + '22'" [style.color]="TYPE_COLORS[t.type]">
                 {{ TYPE_LABELS[t.type] }}
               </span>

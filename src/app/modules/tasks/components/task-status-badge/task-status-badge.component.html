@@ -1,3 +1,33 @@
-<span class="badge" [style.background]="color()" [style.color]="textColor()">
-  {{ label() }}
-</span>
+<div class="status-badge-wrapper" [class.editable]="editable()">
+  <button
+    #badgeBtn
+    class="badge"
+    [class.clickable]="editable()"
+    [style.background]="color()"
+    [style.color]="textColor()"
+    (click)="toggle($event)"
+    type="button"
+  >
+    {{ label() }}
+    @if (editable()) {
+      <app-icon name="chevron-down" [size]="12" />
+    }
+  </button>
+
+  @if (open()) {
+    <div class="dropdown-backdrop" (click)="closeDropdown()"></div>
+    <div class="dropdown" [ngStyle]="dropdownStyle()">
+      @for (s of statuses; track s) {
+        <button
+          class="dropdown-item"
+          [class.active]="s === status()"
+          (click)="select(s, $event)"
+          type="button"
+        >
+          <span class="dropdown-dot" [style.background]="STATUS_COLORS[s]"></span>
+          {{ STATUS_LABELS[s] }}
+        </button>
+      }
+    </div>
+  }
+</div>

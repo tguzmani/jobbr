@@ -6,7 +6,7 @@
         <p class="task-desc">{{ task().description }}</p>
       }
     </div>
-    <app-task-status-badge [status]="task().status" />
+    <app-task-status-badge [status]="task().status" [editable]="true" (statusChange)="onStatusChange($event)" />
   </div>
   <div class="card-meta">
     <span class="meta-item type-badge" [style.background]="typeColor() + '22'" [style.color]="typeColor()">

@@ -22,7 +22,8 @@ export type IconName =
   | 'edit'
   | 'copy'
   | 'check'
-  | 'close';
+  | 'close'
+  | 'chevron-down';
 
 const ICON_PATHS: Record<IconName, string> = {
   'chevron-left': '<polyline points="15 18 9 12 15 6"/>',
@@ -45,7 +46,8 @@ const ICON_PATHS: Record<IconName, string> = {
   'edit': '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
   'copy': '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
   'check': '<polyline points="20 6 9 17 4 12"/>',
-  'close': '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
+  'close': '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  'chevron-down': '<polyline points="6 9 12 15 18 9"/>'
 };
 
 @Component({
@@ -57,13 +59,13 @@ const ICON_PATHS: Record<IconName, string> = {
 export class IconComponent {
   private sanitizer = inject(DomSanitizer);
 
-  name = input.required<IconName>();
+  name = input.required<string>();
   size = input(20);
   strokeWidth = input(2);
   color = input<string | null>(null);
 
   svgHtml = computed(() => {
-    const paths = ICON_PATHS[this.name()] || '';
+    const paths = ICON_PATHS[this.name() as IconName] || '';
     const s = this.size();
     const sw = this.strokeWidth();
     const c = this.color() || 'currentColor';

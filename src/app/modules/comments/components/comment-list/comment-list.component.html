@@ -9,6 +9,22 @@
       placeholder="Add a comment..."
       rows="3"
     ></textarea>
+    <div class="sentiment-picker">
+      <span class="sentiment-label">Sentiment</span>
+      <div class="sentiment-options">
+        @for (s of sentiments; track s.value) {
+          <button
+            type="button"
+            class="sentiment-option"
+            [class.active]="newSentiment() === s.value"
+            [title]="s.label"
+            (click)="newSentiment.set(newSentiment() === s.value ? null : s.value)"
+          >
+            {{ s.emoji }}
+          </button>
+        }
+      </div>
+    </div>
     <button type="submit" class="btn btn-primary" [disabled]="submitting() || !newComment().trim()">
       {{ submitting() ? 'Posting...' : 'Post' }}
     </button>
@@ -22,13 +38,64 @@
     <div class="comments-list">
       @for (comment of comments(); track comment.id) {
         <div class="comment">
-          <div class="comment-header">
-            <span class="comment-date">{{ comment.createdAt.toDate() | date:'medium' }}</span>
-            <button class="comment-delete" (click)="deleteComment(comment.id)" title="Delete comment">
-              <app-icon name="close" [size]="14" />
-            </button>
-          </div>
-          <p class="comment-text">{{ comment.text }}</p>
+          @if (editingId() === comment.id) {
+            <form class="edit-form" (ngSubmit)="saveEdit()">
+              <textarea
+                [ngModel]="editText()"
+                (ngModelChange)="editText.set($event)"
+                name="editText"
+                rows="3"
+              ></textarea>
+              <div class="sentiment-picker">
+                <span class="sentiment-label">Sentiment</span>
+                <div class="sentiment-options">
+                  @for (s of sentiments; track s.value) {
+                    <button
+                      type="button"
+                      class="sentiment-option"
+                      [class.active]="editSentiment() === s.value"
+                      [title]="s.label"
+                      (click)="editSentiment.set(editSentiment() === s.value ? null : s.value)"
+                    >
+                      {{ s.emoji }}
+                    </button>
+                  }
+                </div>
+              </div>
+              <div class="edit-actions">
+                <button type="button" class="btn btn-secondary" (click)="cancelEdit()" [disabled]="editSubmitting()">Cancel</button>
+                <button type="submit" class="btn btn-primary" [disabled]="editSubmitting() || !editText().trim()">
+                  {{ editSubmitting() ? 'Saving...' : 'Save' }}
+                </button>
+              </div>
+            </form>
+          } @else {
+            <div class="comment-header">
+              <div class="comment-header-left">
+                @if (comment.sentiment !== null && comment.sentiment !== undefined) {
+                  <span class="comment-sentiment" [title]="sentiments[5 - comment.sentiment].label">{{ sentiments[5 - comment.sentiment].emoji }}</span>
+                }
+                <span class="comment-date">{{ comment.createdAt.toDate() | date:'medium' }}</span>
+              </div>
+              <div class="comment-actions">
+                <button class="comment-action-btn" (click)="startEdit(comment)" title="Edit comment">
+                  <app-icon name="edit" [size]="14" />
+                </button>
+                <button class="comment-action-btn comment-delete" (click)="deleteComment(comment.id)" title="Delete comment">
+                  <app-icon name="close" [size]="14" />
+                </button>
+              </div>
+            </div>
+            @if (comment.text.length > COMMENT_MAX_LENGTH && !isExpanded(comment.id)) {
+              <p class="comment-text">{{ comment.text.slice(0, COMMENT_MAX_LENGTH) }}...</p>
+              <button class="read-more-btn" (click)="toggleExpand(comment.id)">Read more</button>
+            } @else {
+              <p class="comment-text">{{ comment.text }}</p>
+              @if (comment.text.length > COMMENT_MAX_LENGTH) {
+                <button class="read-more-btn" (click)="toggleExpand(comment.id)">Read less</button>
+              }
+            }
+          }
         </div>
       }
     </div>

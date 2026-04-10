@@ -32,12 +32,17 @@
                 @if (app.source) {
                   <span class="kanban-source">{{ app.source }}</span>
                 }
-                @if (app.commentCount) {
-                  <span class="kanban-comments">
-                    <app-icon name="comment" [size]="12" />
-                    {{ app.commentCount }}
-                  </span>
-                }
+                <div class="kanban-card-footer-right">
+                  @if (app.sentimentAvg !== null && app.sentimentAvg !== undefined) {
+                    <span class="kanban-sentiment">{{ sentimentEmoji(app.sentimentAvg) }} {{ app.sentimentAvg | number:'1.1-1' }}</span>
+                  }
+                  @if (app.commentCount) {
+                    <span class="kanban-comments">
+                      <app-icon name="comment" [size]="12" />
+                      {{ app.commentCount }}
+                    </span>
+                  }
+                </div>
               </div>
             </a>
           </div>

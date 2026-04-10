@@ -8,8 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { APPLICATION_STATUSES, STATUS_LABELS, ApplicationStatus } from '../models/job-application.model';
-
-export type ViewMode = 'list' | 'kanban';
+import { ViewModeService, ViewMode } from '../../../shared/services/view-mode.service';
 
 @Component({
   selector: 'app-applications',
@@ -20,14 +19,14 @@ export type ViewMode = 'list' | 'kanban';
 })
 export class ApplicationsComponent {
   appService = inject(ApplicationsService);
+  private viewModeService = inject(ViewModeService);
   statuses = APPLICATION_STATUSES;
   statusLabels = STATUS_LABELS;
 
-  viewMode = signal<ViewMode>((localStorage.getItem('viewMode') as ViewMode) || 'list');
+  viewMode = this.viewModeService.getMode('viewMode');
 
   setViewMode(mode: ViewMode) {
-    this.viewMode.set(mode);
-    localStorage.setItem('viewMode', mode);
+    this.viewModeService.setMode('viewMode', mode);
   }
   searchQuery = signal('');
   statusFilter = signal<ApplicationStatus | null>(null);

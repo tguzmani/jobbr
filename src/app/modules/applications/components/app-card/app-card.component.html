@@ -1,4 +1,4 @@
-<a class="card" [routerLink]="['/applications', application().id]">
+<a class="card" [routerLink]="['/applications', application().id]" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
   <div class="card-header">
     <div class="company-info">
       <div class="company-avatar">{{ application().company.charAt(0) }}</div>
@@ -33,6 +33,11 @@
       <span class="meta-item">
         <app-icon name="comment" [size]="14" />
         {{ application().commentCount }}
+      </span>
+    }
+    @if (application().sentimentAvg !== null && application().sentimentAvg !== undefined) {
+      <span class="meta-item sentiment">
+        {{ sentimentEmoji(application().sentimentAvg!) }} {{ application().sentimentAvg! | number:'1.1-1' }}
       </span>
     }
   </div>

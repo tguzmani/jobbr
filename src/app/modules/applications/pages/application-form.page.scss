@@ -20,6 +20,21 @@
   padding: 0;
   &:hover { color: #E8E8E8; }
 }
+.form-section {
+  margin-bottom: 24px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #A8A8A8;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
 .form-card {
   background: #1E2429;
   border: 1px solid #2D3748;
@@ -42,7 +57,7 @@ label {
   font-size: 13px;
   font-weight: 500;
 }
-input, select, textarea {
+input, select {
   background-color: #111418;
   border: 1px solid #2D3748;
   border-radius: 4px;
@@ -55,80 +70,22 @@ input, select, textarea {
   &:focus { border-color: #0A66C2; }
   &::placeholder { color: #6b7280; }
 }
-textarea { resize: vertical; }
 select {
   cursor: pointer;
   option { background: #111418; }
-}
-.status-select-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.status-dot {
-  position: absolute;
-  left: 12px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  z-index: 1;
-  pointer-events: none;
-}
-.status-select-wrapper select {
-  padding-left: 30px;
-  width: 100%;
 }
 .error {
   color: #CC1016;
   font-size: 12px;
 }
-.tags-input-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  background: #111418;
-  border: 1px solid #2D3748;
-  border-radius: 4px;
-  padding: 8px 12px;
-  min-height: 42px;
-  align-items: center;
-  &:focus-within { border-color: #0A66C2; }
-}
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(10, 102, 194, 0.15);
-  color: #0A66C2;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-}
-.tag-remove {
-  background: none;
-  border: none;
-  color: #0A66C2;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 0;
-  line-height: 1;
-  &:hover { color: #CC1016; }
-}
-.tags-input {
-  flex: 1;
-  min-width: 100px;
-  background: none !important;
-  border: none !important;
-  padding: 4px 0 !important;
+.salary-hint {
+  color: #6b7280;
+  font-size: 12px;
 }
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #2D3748;
 }
 .btn {
   padding: 10px 24px;

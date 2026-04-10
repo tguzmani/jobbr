@@ -49,7 +49,7 @@ export class CommentsService {
     });
   }
 
-  async add(applicationId: string, text: string): Promise<void> {
+  async add(applicationId: string, text: string, sentiment: number | null): Promise<void> {
     const userId = this.authService.currentUser()?.uid;
     if (!userId) throw new Error('Not authenticated');
 
@@ -57,10 +57,21 @@ export class CommentsService {
       const colRef = collection(this.firestore, `users/${userId}/applications/${applicationId}/comments`);
       await addDoc(colRef, {
         text,
+        sentiment,
         createdAt: Timestamp.now()
       });
       const appRef = doc(this.firestore, `users/${userId}/applications/${applicationId}`);
       await updateDoc(appRef, { commentCount: increment(1) });
+    });
+  }
+
+  async update(applicationId: string, commentId: string, data: { text: string; sentiment: number | null }): Promise<void> {
+    const userId = this.authService.currentUser()?.uid;
+    if (!userId) throw new Error('Not authenticated');
+
+    return runInInjectionContext(this.injector, async () => {
+      const ref = doc(this.firestore, `users/${userId}/applications/${applicationId}/comments/${commentId}`);
+      await updateDoc(ref, { text: data.text, sentiment: data.sentiment });
     });
   }
 

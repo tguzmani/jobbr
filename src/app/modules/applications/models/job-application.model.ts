@@ -35,6 +35,14 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   withdrawn: '#A8A8A8'
 };
 
+export type SalaryPeriod = 'yearly' | 'monthly' | 'hourly';
+
+export const SALARY_PERIOD_LABELS: Record<SalaryPeriod, string> = {
+  yearly: 'Yearly',
+  monthly: 'Monthly',
+  hourly: 'Hourly'
+};
+
 export const PIPELINE_STATUSES: ApplicationStatus[] = [
   'applied',
   'screening',
@@ -58,4 +66,5 @@ export interface JobApplication {
   notes?: string;
   tags: string[];
   commentCount?: number;
+  sentimentAvg?: number | null;
 }

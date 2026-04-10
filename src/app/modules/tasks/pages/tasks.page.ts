@@ -8,8 +8,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { TASK_STATUSES, TASK_STATUS_LABELS, TASK_TYPES, TASK_TYPE_LABELS, TaskStatus, TaskType } from '../models/task.model';
-
-export type ViewMode = 'list' | 'kanban';
+import { ViewModeService, ViewMode } from '../../../shared/services/view-mode.service';
 
 @Component({
   selector: 'app-tasks',
@@ -20,16 +19,16 @@ export type ViewMode = 'list' | 'kanban';
 })
 export class TasksComponent {
   tasksService = inject(TasksService);
+  private viewModeService = inject(ViewModeService);
   statuses = TASK_STATUSES;
   statusLabels = TASK_STATUS_LABELS;
   types = TASK_TYPES;
   typeLabels = TASK_TYPE_LABELS;
 
-  viewMode = signal<ViewMode>((localStorage.getItem('tasksViewMode') as ViewMode) || 'list');
+  viewMode = this.viewModeService.getMode('tasksViewMode');
 
   setViewMode(mode: ViewMode) {
-    this.viewMode.set(mode);
-    localStorage.setItem('tasksViewMode', mode);
+    this.viewModeService.setMode('tasksViewMode', mode);
   }
 
   searchQuery = signal('');

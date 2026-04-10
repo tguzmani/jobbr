@@ -1,8 +1,10 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { ApplicationsService } from '../../services/applications.service';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import { sentimentEmoji } from '../../../comments/models/comment.model';
 import {
   APPLICATION_STATUSES,
   STATUS_LABELS,
@@ -14,7 +16,7 @@ import {
 @Component({
   selector: 'app-kanban-board',
   standalone: true,
-  imports: [RouterLink, DragDropModule, IconComponent],
+  imports: [RouterLink, DecimalPipe, DragDropModule, IconComponent],
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.scss'
 })
@@ -35,6 +37,7 @@ export class KanbanBoardComponent {
     }));
   });
 
+  sentimentEmoji = sentimentEmoji;
   connectedLists = APPLICATION_STATUSES.map(s => `column-${s}`);
 
   getColumnId(status: ApplicationStatus): string {

@@ -7,109 +7,106 @@
     <h1>{{ isEdit() ? 'Edit Application' : 'New Application' }}</h1>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
-    <div class="form-grid">
-      <!-- Company -->
-      <div class="form-group full-width">
-        <label for="company">Company *</label>
-        <input id="company" formControlName="company" placeholder="e.g. Google" />
-        @if (form.get('company')?.touched && form.get('company')?.errors?.['required']) {
-          <span class="error">Company is required</span>
-        }
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <!-- Details Group -->
+    <div class="form-section">
+      <div class="section-header">
+        <app-icon name="briefcase" [size]="18" />
+        <span>Details</span>
       </div>
 
-      <!-- Role -->
-      <div class="form-group full-width">
-        <label for="role">Role *</label>
-        <input id="role" formControlName="role" placeholder="e.g. Senior Frontend Engineer" />
-        @if (form.get('role')?.touched && form.get('role')?.errors?.['required']) {
-          <span class="error">Role is required</span>
-        }
-      </div>
-
-      <!-- Location -->
-      <div class="form-group">
-        <label for="location">Location *</label>
-        <input id="location" formControlName="location" placeholder="e.g. Remote, New York, NY" />
-        @if (form.get('location')?.touched && form.get('location')?.errors?.['required']) {
-          <span class="error">Location is required</span>
-        }
-      </div>
-
-      <!-- Source -->
-      <div class="form-group">
-        <label for="source">Source *</label>
-        <input id="source" formControlName="source" placeholder="e.g. LinkedIn, Wellfound" />
-        @if (form.get('source')?.touched && form.get('source')?.errors?.['required']) {
-          <span class="error">Source is required</span>
-        }
-      </div>
-
-      <!-- Status -->
-      <div class="form-group">
-        <label for="status">Status</label>
-        <div class="status-select-wrapper">
-          <div class="status-dot" [style.background]="getStatusColor()"></div>
-          <select id="status" formControlName="status">
-            @for (status of statuses; track status) {
-              <option [value]="status">{{ STATUS_LABELS[status] }}</option>
+      <div class="form-card">
+        <div class="form-grid">
+          <!-- Company -->
+          <div class="form-group full-width">
+            <label for="company">Company *</label>
+            <input id="company" formControlName="company" placeholder="e.g. Google" />
+            @if (form.get('company')?.touched && form.get('company')?.errors?.['required']) {
+              <span class="error">Company is required</span>
             }
-          </select>
+          </div>
+
+          <!-- Role -->
+          <div class="form-group full-width">
+            <label for="role">Role *</label>
+            <input id="role" formControlName="role" placeholder="e.g. Senior Frontend Engineer" />
+            @if (form.get('role')?.touched && form.get('role')?.errors?.['required']) {
+              <span class="error">Role is required</span>
+            }
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label for="location">Location *</label>
+            <input id="location" formControlName="location" placeholder="e.g. Remote, New York, NY" />
+            @if (form.get('location')?.touched && form.get('location')?.errors?.['required']) {
+              <span class="error">Location is required</span>
+            }
+          </div>
+
+          <!-- Source -->
+          <div class="form-group">
+            <label for="source">Source *</label>
+            <input id="source" formControlName="source" placeholder="e.g. LinkedIn, Wellfound" />
+            @if (form.get('source')?.touched && form.get('source')?.errors?.['required']) {
+              <span class="error">Source is required</span>
+            }
+          </div>
+
+          <!-- Job URL -->
+          <div class="form-group full-width">
+            <label for="jobUrl">Job URL</label>
+            <input id="jobUrl" formControlName="jobUrl" placeholder="https://..." />
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Currency -->
-      <div class="form-group">
-        <label for="currency">Currency</label>
-        <select id="currency" formControlName="currency">
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
-          <option value="CAD">CAD</option>
-          <option value="AUD">AUD</option>
-        </select>
+    <!-- Salary Group -->
+    <div class="form-section">
+      <div class="section-header">
+        <app-icon name="salary" [size]="18" />
+        <span>Salary</span>
       </div>
 
-      <!-- Salary Range -->
-      <div class="form-group">
-        <label for="salaryMin">Salary Min</label>
-        <input id="salaryMin" type="number" formControlName="salaryMin" placeholder="e.g. 120000" />
-      </div>
-      <div class="form-group">
-        <label for="salaryMax">Salary Max</label>
-        <input id="salaryMax" type="number" formControlName="salaryMax" placeholder="e.g. 180000" />
-      </div>
+      <div class="form-card">
+        <div class="form-grid">
+          <!-- Currency & Salary Period -->
+          <div class="form-group">
+            <label for="currency">Currency</label>
+            <select id="currency" formControlName="currency">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="CAD">CAD</option>
+              <option value="AUD">AUD</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="salaryPeriod">Period</label>
+            <select id="salaryPeriod" formControlName="salaryPeriod">
+              @for (period of salaryPeriods; track period) {
+                <option [value]="period">{{ SALARY_PERIOD_LABELS[period] }}</option>
+              }
+            </select>
+          </div>
 
-      <!-- Job URL -->
-      <div class="form-group full-width">
-        <label for="jobUrl">Job URL</label>
-        <input id="jobUrl" formControlName="jobUrl" placeholder="https://..." />
-      </div>
-
-      <!-- Tags -->
-      <div class="form-group full-width">
-        <label for="tagsInput">Tags</label>
-        <div class="tags-input-wrapper">
-          @for (tag of tags(); track tag) {
-            <span class="tag">
-              {{ tag }}
-              <button type="button" class="tag-remove" (click)="removeTag(tag)">&times;</button>
-            </span>
-          }
-          <input
-            id="tagsInput"
-            class="tags-input"
-            placeholder="Type and press Enter"
-            (keydown.enter)="addTag($event)"
-            (keydown.comma)="addTag($event)"
-          />
+          <!-- Salary Range -->
+          <div class="form-group">
+            <label for="salaryMin">Salary Min</label>
+            <input id="salaryMin" type="number" formControlName="salaryMin" placeholder="e.g. 120000" />
+            @if (yearlyMin !== null) {
+              <span class="salary-hint">{{ yearlyMin | number }} {{ form.get('currency')?.value }} / year</span>
+            }
+          </div>
+          <div class="form-group">
+            <label for="salaryMax">Salary Max</label>
+            <input id="salaryMax" type="number" formControlName="salaryMax" placeholder="e.g. 180000" />
+            @if (yearlyMax !== null) {
+              <span class="salary-hint">{{ yearlyMax | number }} {{ form.get('currency')?.value }} / year</span>
+            }
+          </div>
         </div>
-      </div>
-
-      <!-- Notes -->
-      <div class="form-group full-width">
-        <label for="notes">Notes</label>
-        <textarea id="notes" formControlName="notes" rows="4" placeholder="Interview prep, contact info, etc."></textarea>
       </div>
     </div>
 

@@ -15,9 +15,9 @@
   </button>
 
   @if (open()) {
-    <div class="dropdown-backdrop" (click)="closeDropdown()"></div>
+    <div class="dropdown-backdrop" (click)="closeDropdown($event)"></div>
     <div class="dropdown" [ngStyle]="dropdownStyle()">
-      @for (s of statuses; track s) {
+      @for (s of statuses; track s; let i = $index) {
         <button
           class="dropdown-item"
           [class.active]="s === status()"
@@ -26,6 +26,7 @@
         >
           <span class="dropdown-dot" [style.background]="STATUS_COLORS[s]"></span>
           {{ STATUS_LABELS[s] }}
+          <span class="dropdown-hint">{{ i + 1 }}</span>
         </button>
       }
     </div>

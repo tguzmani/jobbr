@@ -1,15 +1,15 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApplicationsService } from '../services/applications.service';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
-import { APPLICATION_STATUSES, STATUS_LABELS, STATUS_COLORS, ApplicationStatus } from '../models/job-application.model';
+import { ApplicationStatus, SalaryPeriod, SALARY_PERIOD_LABELS } from '../models/job-application.model';
 
 @Component({
   selector: 'app-application-form',
   standalone: true,
-  imports: [ReactiveFormsModule, IconComponent],
+  imports: [ReactiveFormsModule, IconComponent, DecimalPipe],
   templateUrl: './application-form.page.html',
   styleUrl: './application-form.page.scss'
 })
@@ -22,19 +22,13 @@ export class ApplicationFormComponent implements OnInit {
 
   isEdit = signal(false);
   saving = signal(false);
-  tags = signal<string[]>([]);
   editId = '';
 
-  statuses = APPLICATION_STATUSES;
-  STATUS_LABELS = STATUS_LABELS;
+  SALARY_PERIOD_LABELS = SALARY_PERIOD_LABELS;
+  salaryPeriods: SalaryPeriod[] = ['yearly', 'monthly', 'hourly'];
 
   goBack() {
     this.location.back();
-  }
-
-  getStatusColor(): string {
-    const val = this.form.get('status')?.value as ApplicationStatus;
-    return STATUS_COLORS[val] || '#A8A8A8';
   }
 
   form: FormGroup = this.fb.group({
@@ -42,13 +36,32 @@ export class ApplicationFormComponent implements OnInit {
     role: ['', Validators.required],
     location: ['', Validators.required],
     source: ['', Validators.required],
-    status: ['applied' as ApplicationStatus],
     currency: ['USD'],
+    salaryPeriod: ['yearly' as SalaryPeriod],
     salaryMin: [null],
     salaryMax: [null],
-    jobUrl: [''],
-    notes: ['']
+    jobUrl: ['']
   });
+
+  private toYearly(amount: number, period: SalaryPeriod): number {
+    if (period === 'hourly') return Math.round(amount * 40 * 52);
+    if (period === 'monthly') return Math.round(amount * 12);
+    return amount;
+  }
+
+  get yearlyMin(): number | null {
+    const val = this.form?.get('salaryMin')?.value;
+    const period = this.form?.get('salaryPeriod')?.value as SalaryPeriod;
+    if (!val || period === 'yearly') return null;
+    return this.toYearly(val, period);
+  }
+
+  get yearlyMax(): number | null {
+    const val = this.form?.get('salaryMax')?.value;
+    const period = this.form?.get('salaryPeriod')?.value as SalaryPeriod;
+    if (!val || period === 'yearly') return null;
+    return this.toYearly(val, period);
+  }
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -62,30 +75,13 @@ export class ApplicationFormComponent implements OnInit {
           role: app.role,
           location: app.location,
           source: app.source,
-          status: app.status,
           currency: app.currency,
           salaryMin: app.salaryMin,
           salaryMax: app.salaryMax,
-          jobUrl: app.jobUrl || '',
-          notes: app.notes || ''
+          jobUrl: app.jobUrl || ''
         });
-        this.tags.set([...app.tags]);
       }
     }
-  }
-
-  addTag(event: Event) {
-    event.preventDefault();
-    const input = event.target as HTMLInputElement;
-    const value = input.value.replace(',', '').trim();
-    if (value && !this.tags().includes(value)) {
-      this.tags.set([...this.tags(), value]);
-    }
-    input.value = '';
-  }
-
-  removeTag(tag: string) {
-    this.tags.set(this.tags().filter(t => t !== tag));
   }
 
   async save() {
@@ -99,13 +95,12 @@ export class ApplicationFormComponent implements OnInit {
       role: formVal.role,
       location: formVal.location,
       source: formVal.source,
-      status: formVal.status,
+      status: 'applied' as ApplicationStatus,
       currency: formVal.currency,
-      tags: this.tags(),
-      ...(formVal.salaryMin ? { salaryMin: formVal.salaryMin } : {}),
-      ...(formVal.salaryMax ? { salaryMax: formVal.salaryMax } : {}),
+      tags: [] as string[],
+      ...(formVal.salaryMin ? { salaryMin: this.toYearly(formVal.salaryMin, formVal.salaryPeriod) } : {}),
+      ...(formVal.salaryMax ? { salaryMax: this.toYearly(formVal.salaryMax, formVal.salaryPeriod) } : {}),
       ...(formVal.jobUrl ? { jobUrl: formVal.jobUrl } : {}),
-      ...(formVal.notes ? { notes: formVal.notes } : {}),
     };
 
     try {

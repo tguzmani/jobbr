@@ -1,4 +1,4 @@
-import { Component, input, output, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, input, output, signal, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { ApplicationStatus, APPLICATION_STATUSES, STATUS_LABELS, STATUS_COLORS } from '../../models/job-application.model';
 import { NgStyle } from '@angular/common';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
@@ -27,19 +27,39 @@ export class StatusBadgeComponent {
   textColor = () => STATUS_COLORS[this.status()];
   label = () => STATUS_LABELS[this.status()];
 
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    if (!this.open()) return;
+    const num = parseInt(event.key, 10);
+    if (num >= 1 && num <= this.statuses.length) {
+      event.preventDefault();
+      event.stopPropagation();
+      const target = this.statuses[num - 1];
+      if (target !== this.status()) {
+        this.statusChange.emit(target);
+      }
+      this.open.set(false);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.open.set(false);
+    }
+  }
+
   toggle(event: Event) {
     if (!this.editable()) return;
     event.preventDefault();
     event.stopPropagation();
     if (!this.open()) {
-      const rect = this.badgeBtn.nativeElement.getBoundingClientRect();
-      this.dropdownStyle.set({
-        position: 'fixed',
-        top: rect.bottom + 6 + 'px',
-        left: rect.left + 'px'
-      });
+      this.positionDropdown();
     }
     this.open.set(!this.open());
+  }
+
+  /** Open the dropdown programmatically (used by keyboard shortcut on hover) */
+  openDropdown() {
+    if (!this.editable() || this.open()) return;
+    this.positionDropdown();
+    this.open.set(true);
   }
 
   select(status: ApplicationStatus, event: Event) {
@@ -51,7 +71,27 @@ export class StatusBadgeComponent {
     this.open.set(false);
   }
 
-  closeDropdown() {
+  closeDropdown(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.open.set(false);
+  }
+
+  private positionDropdown() {
+    const rect = this.badgeBtn.nativeElement.getBoundingClientRect();
+    const dropdownWidth = 160;
+    let left = rect.left;
+
+    if (left + dropdownWidth > window.innerWidth - 8) {
+      left = window.innerWidth - dropdownWidth - 8;
+    }
+
+    this.dropdownStyle.set({
+      position: 'fixed',
+      top: rect.bottom + 6 + 'px',
+      left: left + 'px'
+    });
   }
 }

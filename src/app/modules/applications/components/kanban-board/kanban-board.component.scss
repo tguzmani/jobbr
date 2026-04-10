@@ -182,6 +182,17 @@
   font-size: 11px;
 }
 
+.kanban-card-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanban-sentiment {
+  font-size: 11px;
+  color: #A8A8A8;
+}
+
 .kanban-comments {
   display: flex;
   align-items: center;

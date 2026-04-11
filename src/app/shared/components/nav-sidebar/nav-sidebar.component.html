@@ -28,6 +28,10 @@
       <app-icon name="tasks" />
       @if (!collapsed()) { <span>Tasks</span> }
     </a>
+    <a routerLink="/salary-calculator" routerLinkActive="active" class="nav-item">
+      <app-icon name="salary" />
+      @if (!collapsed()) { <span>Salary Calculator</span> }
+    </a>
     <a routerLink="/profile" routerLinkActive="active" class="nav-item">
       <app-icon name="user" />
       @if (!collapsed()) { <span>Profile</span> }
@@ -66,6 +70,10 @@
   <a routerLink="/tasks" routerLinkActive="active" class="tab">
     <app-icon name="tasks" />
     <span>Tasks</span>
+  </a>
+  <a routerLink="/salary-calculator" routerLinkActive="active" class="tab">
+    <app-icon name="salary" />
+    <span>Calculator</span>
   </a>
   <a routerLink="/profile" routerLinkActive="active" class="tab">
     <app-icon name="user" />

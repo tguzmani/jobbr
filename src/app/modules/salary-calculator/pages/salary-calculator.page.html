@@ -1,0 +1,49 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Salary Calculator</h1>
+  </div>
+
+  <div class="calculator-card">
+    <div class="converter-row">
+      <div class="input-group">
+        <input
+          type="number"
+          placeholder="Enter amount"
+          [value]="fromValue()"
+          (input)="onFromValueChange($any($event.target).value)"
+        />
+      </div>
+      <div class="select-group">
+        <select [value]="fromPeriod()" (change)="onFromPeriodChange($any($event.target).value)">
+          <option value="hourly">Hourly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="swap-row">
+      <button class="swap-btn" (click)="swap()" title="Swap conversion">
+        <app-icon name="swap" [size]="20" />
+      </button>
+    </div>
+
+    <div class="converter-row">
+      <div class="input-group">
+        <input
+          type="text"
+          readonly
+          [value]="toValue() !== null ? (toValue()! | number:'1.2-2') : ''"
+          placeholder="Result"
+        />
+      </div>
+      <div class="select-group">
+        <select [value]="toPeriod()" (change)="onToPeriodChange($any($event.target).value)">
+          <option value="hourly">Hourly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

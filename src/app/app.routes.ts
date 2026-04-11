@@ -27,6 +27,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./modules/profile/profile.routes').then(m => m.PROFILE_ROUTES)
   },
+  {
+    path: 'salary-calculator',
+    canActivate: [authGuard],
+    loadChildren: () => import('./modules/salary-calculator/salary-calculator.routes').then(m => m.SALARY_CALCULATOR_ROUTES)
+  },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard' }
 ];

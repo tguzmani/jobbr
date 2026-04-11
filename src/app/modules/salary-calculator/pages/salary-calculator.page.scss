@@ -1,0 +1,140 @@
+.page {
+  padding: 24px;
+  width: 100%;
+}
+
+.page-header {
+  margin-bottom: 24px;
+  h1 {
+    color: #E8E8E8;
+    font-size: 22px;
+    margin: 0;
+  }
+}
+
+.calculator-card {
+  background: #1E2429;
+  border: 1px solid #2D3748;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 560px;
+}
+
+.converter-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-group {
+  flex: 1;
+
+  input {
+    width: 100%;
+    background-color: #111418;
+    border: 1px solid #2D3748;
+    border-radius: 4px;
+    padding: 12px 14px;
+    color: #E8E8E8;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #0A66C2;
+    }
+
+    &::placeholder {
+      color: #6b7280;
+    }
+
+    &[readonly] {
+      cursor: default;
+      color: #A8A8A8;
+    }
+  }
+}
+
+.select-group {
+  width: 140px;
+  flex-shrink: 0;
+
+  select {
+    width: 100%;
+    background-color: #111418;
+    border: 1px solid #2D3748;
+    border-radius: 4px;
+    padding: 12px 14px;
+    color: #E8E8E8;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #0A66C2;
+    }
+
+    option {
+      background: #111418;
+    }
+  }
+}
+
+.swap-row {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.swap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #2D3748;
+  background-color: #111418;
+  color: #A8A8A8;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #0A66C2;
+    color: #0A66C2;
+    background-color: rgba(10, 102, 194, 0.1);
+  }
+}
+
+// Hide number input spinners
+input[type="number"] {
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+
+  .calculator-card {
+    max-width: none;
+  }
+
+  .converter-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .select-group {
+    width: 100%;
+  }
+}

@@ -24,7 +24,8 @@ export type IconName =
   | 'check'
   | 'close'
   | 'chevron-down'
-  | 'briefcase';
+  | 'briefcase'
+  | 'swap';
 
 const ICON_PATHS: Record<IconName, string> = {
   'chevron-left': '<polyline points="15 18 9 12 15 6"/>',
@@ -49,7 +50,8 @@ const ICON_PATHS: Record<IconName, string> = {
   'check': '<polyline points="20 6 9 17 4 12"/>',
   'close': '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
   'chevron-down': '<polyline points="6 9 12 15 18 9"/>',
-  'briefcase': '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>'
+  'briefcase': '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+  'swap': '<polyline points="17 1 21 5 17 9"/><line x1="3" y1="5" x2="21" y2="5"/><polyline points="7 23 3 19 7 15"/><line x1="21" y1="19" x2="3" y2="19"/>'
 };
 
 @Component({

@@ -32,7 +32,9 @@ export class ApplicationsComponent {
   statusFilter = signal<ApplicationStatus | null>(null);
   sortBy = signal<'updatedAt' | 'appliedAt' | 'company'>('updatedAt');
 
-  filteredApps = computed(() => {
+  rejectedOpen = signal(false);
+
+  private sortedFilteredApps = computed(() => {
     let apps = this.appService.applications();
     const query = this.searchQuery().toLowerCase();
     const status = this.statusFilter();
@@ -42,6 +44,7 @@ export class ApplicationsComponent {
         a.company.toLowerCase().includes(query) ||
         a.role.toLowerCase().includes(query) ||
         a.location.toLowerCase().includes(query) ||
+        a.source.toLowerCase().includes(query) ||
         a.tags.some(t => t.toLowerCase().includes(query))
       );
     }
@@ -57,5 +60,17 @@ export class ApplicationsComponent {
       const bDate = b[sort]?.toMillis?.() ?? 0;
       return bDate - aDate;
     });
+  });
+
+  filteredApps = computed(() => {
+    const hasQuery = !!this.searchQuery();
+    const statusIsRejected = this.statusFilter() === 'rejected';
+    if (hasQuery || statusIsRejected) return this.sortedFilteredApps();
+    return this.sortedFilteredApps().filter(a => a.status !== 'rejected');
+  });
+
+  rejectedApps = computed(() => {
+    if (this.searchQuery() || this.statusFilter()) return [];
+    return this.sortedFilteredApps().filter(a => a.status === 'rejected');
   });
 }

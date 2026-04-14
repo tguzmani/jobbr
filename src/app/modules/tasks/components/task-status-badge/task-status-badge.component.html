@@ -15,7 +15,7 @@
   </button>
 
   @if (open()) {
-    <div class="dropdown-backdrop" (click)="closeDropdown()"></div>
+    <div class="dropdown-backdrop" (click)="closeDropdown($event)"></div>
     <div class="dropdown" [ngStyle]="dropdownStyle()">
       @for (s of statuses; track s) {
         <button

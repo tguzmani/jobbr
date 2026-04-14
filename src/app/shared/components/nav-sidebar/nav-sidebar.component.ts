@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../modules/auth/services/auth.service';
 import { IconComponent } from '../icon/icon.component';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-nav-sidebar',
@@ -12,5 +13,6 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class NavSidebarComponent {
   authService = inject(AuthService);
-  collapsed = signal(false);
+  private sidebarService = inject(SidebarService);
+  collapsed = this.sidebarService.collapsed;
 }

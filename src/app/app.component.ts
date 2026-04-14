@@ -4,6 +4,7 @@ import { AuthService } from './modules/auth/services/auth.service';
 import { NavSidebarComponent } from './shared/components/nav-sidebar/nav-sidebar.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.service';
+import { SidebarService } from './shared/services/sidebar.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.ser
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
+  sidebarService = inject(SidebarService);
   private keyboardShortcuts = inject(KeyboardShortcutService);
 
   ngOnInit(): void {

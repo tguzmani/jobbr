@@ -35,23 +35,39 @@
             }
           </div>
 
-          <!-- Location -->
+          <!-- Location Type -->
           <div class="form-group">
-            <label for="location">Location *</label>
-            <input id="location" formControlName="location" placeholder="e.g. Remote, New York, NY" />
-            @if (form.get('location')?.touched && form.get('location')?.errors?.['required']) {
-              <span class="error">Location is required</span>
-            }
+            <label for="locationType">Location Type *</label>
+            <select id="locationType" formControlName="locationType">
+              @for (type of locationTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Location City -->
+          <div class="form-group">
+            <label for="locationCity">City</label>
+            <input id="locationCity" formControlName="locationCity" placeholder="e.g. New York, NY" />
           </div>
 
           <!-- Source -->
           <div class="form-group">
             <label for="source">Source *</label>
-            <input id="source" formControlName="source" placeholder="e.g. LinkedIn, Wellfound" />
-            @if (form.get('source')?.touched && form.get('source')?.errors?.['required']) {
-              <span class="error">Source is required</span>
-            }
+            <select id="source" formControlName="source">
+              @for (src of sourceOptions; track src) {
+                <option [value]="src">{{ src }}</option>
+              }
+            </select>
           </div>
+
+          <!-- Custom Source -->
+          @if (form.get('source')?.value === 'Other') {
+            <div class="form-group">
+              <label for="sourceCustom">Specify Source *</label>
+              <input id="sourceCustom" formControlName="sourceCustom" placeholder="e.g. Twitter, Hacker News" />
+            </div>
+          }
 
           <!-- Job URL -->
           <div class="form-group full-width">

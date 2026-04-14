@@ -1,10 +1,15 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApplicationsService } from '../services/applications.service';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { ApplicationStatus, SalaryPeriod, SALARY_PERIOD_LABELS } from '../models/job-application.model';
+
+const LOCATION_TYPES = ['Remote', 'Hybrid', 'On-site'] as const;
+type LocationType = typeof LOCATION_TYPES[number];
+
+const SOURCE_OPTIONS = ['LinkedIn', 'Indeed', 'Glassdoor', 'Wellfound', 'Company Website', 'Referral', 'Other'] as const;
 
 @Component({
   selector: 'app-application-form',
@@ -26,6 +31,8 @@ export class ApplicationFormComponent implements OnInit {
 
   SALARY_PERIOD_LABELS = SALARY_PERIOD_LABELS;
   salaryPeriods: SalaryPeriod[] = ['yearly', 'monthly', 'hourly'];
+  locationTypes = LOCATION_TYPES;
+  sourceOptions = SOURCE_OPTIONS;
 
   goBack() {
     this.location.back();
@@ -34,14 +41,29 @@ export class ApplicationFormComponent implements OnInit {
   form: FormGroup = this.fb.group({
     company: ['', Validators.required],
     role: ['', Validators.required],
-    location: ['', Validators.required],
-    source: ['', Validators.required],
+    locationType: ['Remote' as LocationType],
+    locationCity: [''],
+    source: ['LinkedIn'],
+    sourceCustom: [''],
     currency: ['USD'],
     salaryPeriod: ['yearly' as SalaryPeriod],
     salaryMin: [null],
     salaryMax: [null],
     jobUrl: ['']
   });
+
+  get resolvedLocation(): string {
+    const type = this.form.get('locationType')?.value as LocationType;
+    const city = (this.form.get('locationCity')?.value || '').trim();
+    if (type === 'Remote') return city ? `Remote — ${city}` : 'Remote';
+    return city ? `${type} — ${city}` : type;
+  }
+
+  get resolvedSource(): string {
+    const source = this.form.get('source')?.value;
+    if (source === 'Other') return (this.form.get('sourceCustom')?.value || '').trim();
+    return source;
+  }
 
   private toYearly(amount: number, period: SalaryPeriod): number {
     if (period === 'hourly') return Math.round(amount * 40 * 52);
@@ -70,11 +92,29 @@ export class ApplicationFormComponent implements OnInit {
       this.editId = id;
       const app = await this.appService.getById(id);
       if (app) {
+        // Parse location back into type + city
+        let locationType: LocationType = 'On-site';
+        let locationCity = app.location;
+        for (const type of LOCATION_TYPES) {
+          if (app.location.startsWith(type)) {
+            locationType = type;
+            locationCity = app.location.replace(new RegExp(`^${type}(\\s*—\\s*)?`), '').trim();
+            break;
+          }
+        }
+
+        // Parse source back
+        const knownSource = SOURCE_OPTIONS.find(s => s === app.source);
+        const source = knownSource ?? 'Other';
+        const sourceCustom = knownSource ? '' : app.source;
+
         this.form.patchValue({
           company: app.company,
           role: app.role,
-          location: app.location,
-          source: app.source,
+          locationType,
+          locationCity,
+          source,
+          sourceCustom,
           currency: app.currency,
           salaryMin: app.salaryMin,
           salaryMax: app.salaryMax,
@@ -86,6 +126,7 @@ export class ApplicationFormComponent implements OnInit {
 
   async save() {
     if (this.form.invalid) return;
+    if (this.form.get('source')?.value === 'Other' && !this.resolvedSource) return;
     this.saving.set(true);
 
     const formVal = this.form.value;
@@ -93,8 +134,8 @@ export class ApplicationFormComponent implements OnInit {
     const data = {
       company: formVal.company,
       role: formVal.role,
-      location: formVal.location,
-      source: formVal.source,
+      location: this.resolvedLocation,
+      source: this.resolvedSource,
       status: 'applied' as ApplicationStatus,
       currency: formVal.currency,
       tags: [] as string[],

@@ -33,10 +33,17 @@ export class TaskStatusBadgeComponent {
     event.stopPropagation();
     if (!this.open()) {
       const rect = this.badgeBtn.nativeElement.getBoundingClientRect();
+      const dropdownWidth = 160;
+      let left = rect.left;
+
+      if (left + dropdownWidth > window.innerWidth - 8) {
+        left = window.innerWidth - dropdownWidth - 8;
+      }
+
       this.dropdownStyle.set({
         position: 'fixed',
         top: rect.bottom + 6 + 'px',
-        left: rect.left + 'px'
+        left: left + 'px'
       });
     }
     this.open.set(!this.open());
@@ -51,7 +58,9 @@ export class TaskStatusBadgeComponent {
     this.open.set(false);
   }
 
-  closeDropdown() {
+  closeDropdown(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.open.set(false);
   }
 }

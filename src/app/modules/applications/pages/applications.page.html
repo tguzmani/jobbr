@@ -26,7 +26,7 @@
     <div class="toolbar">
       <div class="search-box">
         <app-icon name="search" [size]="16" />
-        <input type="text" placeholder="Search companies, roles..." [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
+        <input type="text" placeholder="Search companies, roles, sources..." [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
       </div>
       <div class="filters">
         <div class="filter-chips">
@@ -61,6 +61,22 @@
           <app-card [application]="app" />
         }
       </div>
+
+      @if (rejectedApps().length > 0) {
+        <div class="rejected-section">
+          <button class="rejected-toggle" (click)="rejectedOpen.set(!rejectedOpen())">
+            <app-icon name="chevron-down" [size]="18" [class.rotated]="!rejectedOpen()" />
+            <span>Rejected ({{ rejectedApps().length }})</span>
+          </button>
+          @if (rejectedOpen()) {
+            <div class="cards-list">
+              @for (app of rejectedApps(); track app.id) {
+                <app-card [application]="app" />
+              }
+            </div>
+          }
+        </div>
+      }
     }
   }
 

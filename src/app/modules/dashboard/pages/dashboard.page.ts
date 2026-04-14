@@ -20,7 +20,9 @@ export class DashboardComponent {
   appService = inject(ApplicationsService);
   tasksService = inject(TasksService);
 
-  recentApps = computed(() => this.appService.applications().slice(0, 5));
+  recentApps = computed(() =>
+    this.appService.applications().filter(a => a.status !== 'rejected').slice(0, 5)
+  );
 
   stats = computed(() => {
     const byStatus = this.appService.byStatus();

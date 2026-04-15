@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { ATSAnalysisResult } from './ats-analysis.model';
 
 export type ApplicationStatus =
   | 'applied'
@@ -67,4 +68,7 @@ export interface JobApplication {
   tags: string[];
   commentCount?: number;
   sentimentAvg?: number | null;
+  jdText?: string;
+  jdEmbedding?: number[];
+  matchResult?: ATSAnalysisResult;
 }

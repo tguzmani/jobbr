@@ -1,0 +1,38 @@
+<div class="cv-list-section">
+  <div class="section-header">
+    <h3>My CVs</h3>
+    <label class="upload-btn" [class.disabled]="uploading()">
+      <app-icon name="upload" [size]="16" />
+      {{ uploading() ? 'Uploading...' : 'Upload PDF' }}
+      <input #fileInput type="file" accept=".pdf" (change)="onFileSelected($event)" [disabled]="uploading()" hidden />
+    </label>
+  </div>
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (uploading()) {
+    <app-loading-spinner />
+  }
+
+  @if (cvService.cvs().length === 0 && !uploading()) {
+    <app-empty-state
+      title="No CVs uploaded"
+      message="Upload your first CV to start matching against job descriptions."
+    />
+  } @else {
+    <div class="cv-cards">
+      @for (cv of cvService.cvs(); track cv.id) {
+        <app-cv-card [cv]="cv" (deleted)="deleteCv($event)" />
+      }
+    </div>
+  }
+
+  @if (showNameDialog()) {
+    <app-cv-name-dialog
+      (confirmed)="onNameConfirmed($event)"
+      (cancelled)="onNameCancelled()"
+    />
+  }
+</div>

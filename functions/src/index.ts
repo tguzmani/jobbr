@@ -1,6 +1,8 @@
 import { onDocumentWritten } from "firebase-functions/v2/firestore";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { generateEmbeddingFn } from "./embeddings/generate-embedding.function";
+import { analyzeMatchFn } from "./analysis/analyze-match.function";
 
 initializeApp();
 
@@ -39,3 +41,6 @@ export const recalculateSentimentAvg = onDocumentWritten(
       .update({ sentimentAvg });
   }
 );
+
+export const generateEmbedding = generateEmbeddingFn;
+export const analyzeMatch = analyzeMatchFn;

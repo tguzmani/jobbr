@@ -3,18 +3,23 @@ import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../services/profile.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { CvListComponent } from '../../cv/pages/cv-list/cv-list.page';
 import { UserProfile, PROFILE_FIELD_GROUPS, ProfileFieldGroup } from '../models/user-profile.model';
+
+type ProfileTab = 'info' | 'cvs';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule, LoadingSpinnerComponent, IconComponent],
+  imports: [FormsModule, LoadingSpinnerComponent, IconComponent, CvListComponent],
   templateUrl: './profile.page.html',
   styleUrl: './profile.page.scss'
 })
 export class ProfileComponent implements OnInit {
   profileService = inject(ProfileService);
   groups = PROFILE_FIELD_GROUPS;
+
+  activeTab = signal<ProfileTab>('info');
 
   editing = signal(false);
   saving = signal(false);

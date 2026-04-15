@@ -127,6 +127,169 @@
         }
       </div>
 
+      <!-- ATS Match Section -->
+      <div class="detail-card">
+        <h3>ATS Match</h3>
+        <div class="ats-input">
+          <textarea
+            placeholder="Paste the job description here..."
+            [ngModel]="jdText()"
+            (ngModelChange)="jdText.set($event)"
+            rows="6"
+          ></textarea>
+          <button
+            class="btn-analyze"
+            (click)="analyzeMatch()"
+            [disabled]="analyzing() || !jdText().trim()"
+          >
+            @if (analyzing()) {
+              <app-loading-spinner />
+              Analyzing...
+            } @else {
+              <app-icon name="target" [size]="16" />
+              Analyze Match
+            }
+          </button>
+        </div>
+
+        @if (analysisError()) {
+          <div class="ats-error">{{ analysisError() }}</div>
+        }
+      </div>
+
+      @if (matchResult(); as result) {
+        <!-- Decision Banner -->
+        <div class="decision-banner" [style.border-left-color]="getDecisionColor(result.decision.action)" [style.background]="getDecisionColor(result.decision.action) + '11'">
+          <div class="decision-header">
+            <div class="decision-action" [style.color]="getDecisionColor(result.decision.action)">
+              @switch (result.decision.action) {
+                @case ('APPLY_NOW') { <app-icon name="check" [size]="20" /> }
+                @case ('APPLY_AFTER_EDITS') { <app-icon name="zap" [size]="20" /> }
+                @case ('SKIP') { <app-icon name="close" [size]="20" /> }
+              }
+              <span class="decision-label">{{ getDecisionLabel(result.decision.action) }}</span>
+              <span class="ats-score-badge" [style.background]="getDecisionColor(result.decision.action) + '22'" [style.color]="getDecisionColor(result.decision.action)">
+                Score: {{ result.ats_score }}%
+              </span>
+            </div>
+            @if (result.decision.time_estimate) {
+              <span class="time-badge">{{ result.decision.time_estimate }}</span>
+            }
+          </div>
+          <p class="decision-reason">{{ result.decision.reason }}</p>
+          <div class="decision-cv-pill">
+            <app-icon name="file-text" [size]="14" />
+            Best match: {{ result.bestCvName }}
+          </div>
+        </div>
+
+        <!-- CV Match -->
+        <div class="detail-card">
+          <h3>CV Match</h3>
+          <div class="cv-match-row">
+            <span class="cv-match-label">{{ result.bestCvName }}</span>
+            <div class="similarity-bar-wrapper">
+              <div class="similarity-bar">
+                <div class="similarity-fill" [style.width.%]="result.similarity_pct" [style.background]="getDecisionColor(result.decision.action)"></div>
+              </div>
+              <span class="similarity-pct">{{ result.similarity_pct }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Keywords -->
+        <div class="detail-card">
+          <h3>Keywords</h3>
+          <div class="two-columns">
+            <div class="column">
+              <span class="column-header present-header">Present</span>
+              @for (kw of result.keywords.present; track kw) {
+                <div class="keyword-item present">
+                  <app-icon name="check" [size]="14" color="#5CB85C" />
+                  <span>{{ kw }}</span>
+                </div>
+              }
+              @if (result.keywords.present.length === 0) {
+                <span class="empty-text">None found</span>
+              }
+            </div>
+            <div class="column">
+              <span class="column-header missing-header">Missing</span>
+              @for (kw of result.keywords.missing; track kw) {
+                <div class="keyword-item missing">
+                  <app-icon name="close" [size]="14" color="#CC1016" />
+                  <span>{{ kw }}</span>
+                </div>
+              }
+              @if (result.keywords.missing.length === 0) {
+                <span class="empty-text">None missing</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Hard Requirements -->
+        <div class="detail-card">
+          <h3>Hard Requirements</h3>
+          <div class="two-columns">
+            <div class="column">
+              <span class="column-header present-header">Found</span>
+              @for (req of result.hard_requirements.found; track req) {
+                <div class="keyword-item present">
+                  <app-icon name="check" [size]="14" color="#5CB85C" />
+                  <span>{{ req }}</span>
+                </div>
+              }
+              @if (result.hard_requirements.found.length === 0) {
+                <span class="empty-text">None found</span>
+              }
+            </div>
+            <div class="column">
+              <span class="column-header missing-header">Missing</span>
+              @for (req of result.hard_requirements.missing; track req) {
+                <div class="keyword-item missing">
+                  <app-icon name="close" [size]="14" color="#CC1016" />
+                  <span>{{ req }}</span>
+                </div>
+              }
+              @if (result.hard_requirements.missing.length === 0) {
+                <span class="empty-text">None missing</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Wins (only for APPLY_AFTER_EDITS) -->
+        @if (result.decision.action === 'APPLY_AFTER_EDITS' && result.decision.quick_wins.length > 0) {
+          <div class="detail-card">
+            <h3>Quick Wins</h3>
+            <div class="quick-wins-list">
+              @for (win of result.decision.quick_wins; track $index) {
+                <div class="quick-win-item">
+                  <div class="quick-win-header">
+                    <span class="quick-win-section">{{ win.section }}</span>
+                    <span class="quick-win-impact" [class.high]="win.impact === 'HIGH'" [class.medium]="win.impact === 'MEDIUM'">
+                      {{ win.impact }}
+                    </span>
+                  </div>
+                  <div class="quick-win-diff">
+                    <div class="diff-before">
+                      <span class="diff-label">Before</span>
+                      <span class="diff-text">{{ win.original }}</span>
+                    </div>
+                    <app-icon name="arrow-right" [size]="16" color="#A8A8A8" />
+                    <div class="diff-after">
+                      <span class="diff-label">After</span>
+                      <span class="diff-text">{{ win.suggested }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+
       <div class="detail-card">
         <app-comment-list [applicationId]="application.id" />
       </div>

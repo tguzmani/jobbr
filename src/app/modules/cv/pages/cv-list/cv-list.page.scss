@@ -1,0 +1,47 @@
+.cv-list-section {
+  width: 100%;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  h3 {
+    color: #E8E8E8;
+    font-size: 15px;
+    margin: 0;
+  }
+}
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(10, 102, 194, 0.15);
+  color: #0A66C2;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover:not(.disabled) { background: rgba(10, 102, 194, 0.25); }
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+.error-banner {
+  background: rgba(204, 16, 22, 0.1);
+  border: 1px solid #CC1016;
+  color: #CC1016;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.cv-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

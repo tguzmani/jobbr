@@ -1,23 +1,32 @@
 <div class="page">
   <div class="page-header">
     <h1>Profile</h1>
-    @if (!editing()) {
-      <button class="btn-primary" (click)="startEditing()">
-        <app-icon name="edit" [size]="16" />
-        Edit
-      </button>
-    } @else {
-      <div class="header-actions">
-        <button class="btn-secondary" (click)="cancelEditing()">Cancel</button>
-        <button class="btn-primary" (click)="saveProfile()" [disabled]="saving()">
-          {{ saving() ? 'Saving...' : 'Save' }}
+    @if (activeTab() === 'info') {
+      @if (!editing()) {
+        <button class="btn-primary" (click)="startEditing()">
+          <app-icon name="edit" [size]="16" />
+          Edit
         </button>
-      </div>
+      } @else {
+        <div class="header-actions">
+          <button class="btn-secondary" (click)="cancelEditing()">Cancel</button>
+          <button class="btn-primary" (click)="saveProfile()" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      }
     }
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab" [class.active]="activeTab() === 'info'" (click)="activeTab.set('info')">Personal Info</button>
+    <button class="tab" [class.active]="activeTab() === 'cvs'" (click)="activeTab.set('cvs')">My CVs</button>
   </div>
 
   @if (profileService.isLoading()) {
     <app-loading-spinner />
+  } @else if (activeTab() === 'cvs') {
+    <app-cv-list />
   } @else {
     @for (group of groups; track group.name) {
       <div class="profile-group">

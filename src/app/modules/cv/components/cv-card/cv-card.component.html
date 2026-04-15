@@ -1,0 +1,14 @@
+<div class="cv-card">
+  <div class="cv-card-left">
+    <div class="cv-icon">
+      <app-icon name="file-text" [size]="20" />
+    </div>
+    <div class="cv-info">
+      <span class="cv-name">{{ cv().name }}</span>
+      <span class="cv-meta">{{ cv().filename }} &middot; {{ cv().createdAt.toDate() | date:'mediumDate' }}</span>
+    </div>
+  </div>
+  <button class="delete-btn" (click)="deleted.emit(cv().id)" title="Delete CV">
+    <app-icon name="trash" [size]="16" />
+  </button>
+</div>

@@ -69,6 +69,22 @@
           <app-task-card [task]="task" />
         }
       </div>
+
+      @if (failedTasks().length > 0) {
+        <div class="rejected-section">
+          <button class="rejected-toggle" (click)="failedOpen.set(!failedOpen())">
+            <app-icon name="chevron-down" [size]="18" [class.rotated]="!failedOpen()" />
+            <span>Failed ({{ failedTasks().length }})</span>
+          </button>
+          @if (failedOpen()) {
+            <div class="cards-list">
+              @for (task of failedTasks(); track task.id) {
+                <app-task-card [task]="task" />
+              }
+            </div>
+          }
+        </div>
+      }
     }
   }
 

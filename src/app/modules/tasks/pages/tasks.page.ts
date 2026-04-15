@@ -36,7 +36,9 @@ export class TasksComponent {
   typeFilter = signal<TaskType | null>(null);
   sortBy = signal<'updatedAt' | 'dueDate' | 'name'>('dueDate');
 
-  filteredTasks = computed(() => {
+  failedOpen = signal(false);
+
+  private sortedFilteredTasks = computed(() => {
     let tasks = this.tasksService.tasks();
     const query = this.searchQuery().toLowerCase();
     const status = this.statusFilter();
@@ -65,5 +67,17 @@ export class TasksComponent {
       const bDate = b[sort]?.toMillis?.() ?? 0;
       return bDate - aDate;
     });
+  });
+
+  filteredTasks = computed(() => {
+    const hasQuery = !!this.searchQuery();
+    const statusIsFailed = this.statusFilter() === 'failed';
+    if (hasQuery || statusIsFailed) return this.sortedFilteredTasks();
+    return this.sortedFilteredTasks().filter(t => t.status !== 'failed');
+  });
+
+  failedTasks = computed(() => {
+    if (this.searchQuery() || this.statusFilter()) return [];
+    return this.sortedFilteredTasks().filter(t => t.status === 'failed');
   });
 }

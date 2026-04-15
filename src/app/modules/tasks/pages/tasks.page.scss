@@ -132,6 +132,30 @@
   display: grid;
   gap: 12px;
 }
+.rejected-section {
+  margin-top: 32px;
+  border-top: 1px solid #2D3748;
+  padding-top: 16px;
+}
+.rejected-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #A8A8A8;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 12px;
+  transition: color 0.15s;
+  &:hover { color: #E8E8E8; }
+  app-icon {
+    transition: transform 0.2s;
+    &.rotated { transform: rotate(-90deg); }
+  }
+}
 .fab {
   position: fixed;
   bottom: 24px;
